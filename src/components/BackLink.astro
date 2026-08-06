@@ -1,0 +1,21 @@
+---
+// Tombol "Kembali" minimalis. Dipakai di semua halaman detail
+// (kategori & artikel) lewat baris breadcrumb.
+//
+// Perilakunya sengaja DETERMINISTIK: selalu menuju `href`, tidak memakai
+// history.back(). Sebelumnya tombol ini mengikuti riwayat browser, sehingga
+// tujuannya berubah-ubah tergantung user datang dari mana — membingungkan.
+interface Props {
+  href: string;
+  label?: string;
+}
+const { href, label = "Kembali" } = Astro.props;
+---
+
+<a href={href} class="back-link">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <polyline points="15 6 9 12 15 18" />
+  </svg>
+  <span>{label}</span>
+</a>

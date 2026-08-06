@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" role="img"
+     aria-label="Placeholder tangkapan layar">
+  <rect width="960" height="420" fill="#F5F0E6"/>
+  <rect x="24" y="24" width="912" height="372" rx="10"
+        fill="#ffffff" stroke="#E8E2D6" stroke-width="2"/>
+  <rect x="24" y="24" width="912" height="52" rx="10" fill="#FBF8F2"/>
+  <circle cx="56" cy="50" r="6" fill="#E8E2D6"/>
+  <circle cx="78" cy="50" r="6" fill="#E8E2D6"/>
+  <circle cx="100" cy="50" r="6" fill="#E8E2D6"/>
+  <rect x="64" y="120" width="300" height="16" rx="8" fill="#E8E2D6"/>
+  <rect x="64" y="156" width="520" height="12" rx="6" fill="#EFEAE0"/>
+  <rect x="64" y="184" width="440" height="12" rx="6" fill="#EFEAE0"/>
+  <rect x="64" y="240" width="180" height="36" rx="8" fill="#D85A30"/>
+  <text x="480" y="352" text-anchor="middle"
+        font-family="Inter, system-ui, sans-serif" font-size="17" fill="#888780">
+    Ganti gambar ini lewat markdown: ![alt](/images/nama-file.png)
+  </text>
+</svg>

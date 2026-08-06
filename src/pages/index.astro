@@ -1,0 +1,217 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../layouts/Base.astro";
+import { CATEGORIES, SUBMENUS, ICONS } from "../data/categories.js";
+import SpotlightIsland from "../components/SpotlightIsland.tsx";
+import { buildSearchIndex } from "../data/search-index.js";
+import { articleHref, articleSlug } from "../data/article-slug.js";
+import { categoryIcon } from "../data/category-icon.js";
+
+// Index pencarian dibangun dengan daftar artikel yang benar-benar ada, supaya
+// item yang belum punya file .md diarahkan ke halaman kategorinya, bukan 404.
+const articles = await getCollection("artikel");
+const available = new Set(articles.map(a => a.slug));
+
+// Artikel yang tidak terdaftar di SUBMENUS tetap harus bisa dicari.
+const listedSlugs = new Set(
+  CATEGORIES.flatMap(c =>
+    (SUBMENUS[c.slug] || []).flatMap(sec =>
+      sec.items.map(it => articleSlug(c.slug, it.l, sec.header))
+    )
+  )
+);
+const extraEntries = articles
+  .filter(a => !listedSlugs.has(a.slug))
+  .map(a => ({
+    t: a.data.title,
+    s: CATEGORIES.find(c => c.slug === a.data.category)?.label ?? a.data.category,
+    u: `/artikel/${a.slug}`,
+    i: "doc",
+  }));
+
+const SEARCH_INDEX = [...buildSearchIndex(available), ...extraEntries];
+
+const cards = CATEGORIES.map(c => {
+  const count = (SUBMENUS[c.slug] || []).reduce((n, s) => n + s.items.length, 0);
+  // Pakai gambar kalau ada file-nya di public/images/icons/<slug>.png,
+  // kalau tidak jatuh ke ikon SVG bawaan.
+  return { ...c, count, art: categoryIcon(c.slug, c.icon) };
+});
+
+// Kata yang berputar di judul hero. Panjangnya sengaja dibikin mirip
+// supaya slot-nya stabil dan tidak bikin layout shift.
+// NOTE: jumlah kata terikat ke @keyframes wordCycle di style.css —
+// kalau daftar ini berubah, sesuaikan juga persentase keyframe-nya.
+const ROTATING_WORDS = ["jawaban", "panduan", "bantuan"];
+
+// Chip pencarian populer. Istilah di mockup ("reset password", "purchase order",
+// "alur approval") semuanya menghasilkan 0 hasil pada index yang ada, jadi
+// dipakai istilah yang benar-benar ada di data supaya chip tidak menuntun
+// user ke layar kosong. Angka = jumlah hasil saat ini.
+const POPULAR = ["dashboard", "sales", "asset"];
+
+// "Mulai dari sini" diambil dari data asli — 3 menu pertama kategori pembuka.
+// Tidak ada field estimasi waktu baca di schema content collection, jadi baris
+// kedua memakai nama kategori.
+// Tujuan tombol support. ISI DI SINI kalau sudah punya nomor/URL-nya —
+// tombol WhatsApp sengaja tidak dirender selama `whatsapp` masih kosong,
+// daripada mengirim user ke link mati.
+const SUPPORT = {
+  whatsapp: "",                        // contoh: "https://wa.me/628123456789"
+  form: "mailto:support@baked.id",     // ganti ke URL form kalau sudah ada
+};
+
+// Jumlah kartu kategori yang tampil di mobile sebelum "Tampilkan lainnya".
+const MOBILE_VISIBLE = 4;
+
+const startCat = CATEGORIES[0];
+const startSection = SUBMENUS[startCat.slug]?.[0];
+const startItems = (startSection?.items ?? []).slice(0, 3).map(it => ({
+  label: it.l,
+  icon: ICONS[it.i] || ICONS.dot,
+  href: articleHref(startCat.slug, it.l, startSection?.header),
+}));
+---
+<Base title="Pusat Bantuan — BAKED.">
+
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="eyebrow" style="color:var(--sand)"></div>
+      <h1 class="reveal" style="--d:0ms">
+        Temukan <span class="word-rotator"><span class="sr-only">{ROTATING_WORDS[0]}</span><span class="wr-slot" aria-hidden="true">{ROTATING_WORDS.map((w, i) => (
+          <span class="wr-word" style={`--i:${i}`}>{w}</span>
+        ))}</span></span> Anda di sini
+      </h1>
+      <p class="reveal" style="--d:130ms">Panduan lengkap untuk setiap modul</p>
+      <div class="reveal" style="--d:260ms">
+        <SpotlightIsland client:load inline index={SEARCH_INDEX} />
+      </div>
+
+      <!-- Chip berada DI LUAR komponen search; tidak ada satu pun file search
+           yang disentuh. Chip mengisi input lewat DOM biasa (lihat <script>). -->
+      <div class="reveal mt-3 flex flex-wrap items-center justify-center gap-[7px]" style="--d:340ms">
+        <span class="text-[12px] text-mist">Populer:</span>
+        {POPULAR.map(term => (
+          <button
+            type="button"
+            data-popular={term}
+            class="cursor-pointer rounded-full border-[0.5px] border-solid border-clay-dark bg-transparent px-[11px] py-[4px] text-[12px] text-clay-light transition-colors duration-150 hover:border-clay hover:text-clay"
+          >{term}</button>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <section class="bg-cream px-7 pb-2 pt-[18px]">
+    <div class="mx-auto max-w-[1180px]">
+      <h2 class="m-0 mb-4 text-[18px] font-semibold tracking-[-0.01em] text-charcoal">Baru di BAKED? Mulai dari sini</h2>
+      <!-- Mobile: strip yang bisa digeser (snap per kartu). Desktop: grid 3 kolom. -->
+      <div class="start-rail flex snap-x snap-mandatory gap-[10px] overflow-x-auto sm:grid sm:grid-cols-3 sm:overflow-x-visible">
+        {startItems.map(it => (
+          <a href={it.href} class="start-card block min-w-[62%] shrink-0 snap-start rounded-[10px] bg-white p-4 sm:min-w-0 sm:shrink">
+            <span class="start-icon block text-ink" set:html={it.icon} />
+            <span class="mt-2 block text-[15px] font-medium text-charcoal">{it.label}</span>
+            <span class="mt-[3px] block text-[13px] text-stone">{startCat.label}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <div class="section" id="kategori">
+    <div class="section-head">
+      <div>
+        <h2>Kategori</h2>
+      </div>
+    </div>
+
+    <div class="grid" id="cat-grid" data-visible={MOBILE_VISIBLE}>
+      {cards.map(c => (
+        <a class="cat-card" href={`/kategori/${c.slug}`}>
+          {c.art.src
+            ? <span class="cat-icon is-image" style={`--icon:url('${c.art.src}')`} />
+            : <span class="cat-icon" set:html={c.art.svg} />}
+          <span>
+            <span class="label">{c.label}</span>
+            <span class="count">{c.count} menu</span>
+          </span>
+        </a>
+      ))}
+    </div>
+
+    <!-- Hanya tampil di mobile (lihat .cat-more di style.css). -->
+    <button
+      type="button"
+      id="cat-more"
+      class="cat-more mt-[10px] w-full cursor-pointer rounded-[10px] border-[0.5px] border-solid border-line-warm bg-transparent py-[12px] text-[13.5px] font-medium text-stone"
+    >Tampilkan {cards.length - MOBILE_VISIBLE} kategori lainnya</button>
+  </div>
+
+  <section class="px-7 pb-10">
+    <div class="mx-auto max-w-[1180px] rounded-[10px] bg-white p-5 sm:flex sm:items-center sm:justify-between sm:gap-6">
+      <div>
+        <h2 class="m-0 text-[18px] font-semibold text-charcoal">Belum menemukan jawabannya?</h2>
+        <p class="m-0 mt-[6px] text-[14px] text-stone">
+          Hubungi tim IT — dibalas dalam 2 jam kerja
+        </p>
+      </div>
+      <div class="mt-4 flex flex-col gap-[10px] sm:mt-0 sm:flex-row sm:shrink-0">
+        {SUPPORT.whatsapp && (
+          <a
+            href={SUPPORT.whatsapp}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="rounded-lg border-[0.5px] border-solid border-line-warm px-5 py-[11px] text-center text-[13.5px] font-medium text-charcoal transition-colors duration-150 hover:border-clay"
+          >WhatsApp</a>
+        )}
+        <a
+          href={SUPPORT.form}
+          class="rounded-lg bg-clay px-5 py-[11px] text-center text-[13.5px] font-medium text-white transition-colors duration-150 hover:bg-clay-dark"
+        >Hubungi support</a>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    // Chip mengisi input search yang SUDAH ADA lalu memicu mekanisme pencarian
+    // yang sudah ada. Tidak ada file/props komponen search yang diubah — ini
+    // murni interaksi DOM dari luar.
+    //
+    // Kenapa pakai native value setter, bukan `input.value = ...`?
+    // Input-nya controlled component React. Menyetel .value langsung akan
+    // ditimpa React pada render berikutnya karena React melacak nilai lama.
+    // Memanggil setter prototipe lalu men-dispatch event 'input' membuat React
+    // membaca perubahan itu seperti ketikan user sungguhan.
+    if (!window.__popularChipsBound) {
+      window.__popularChipsBound = true;
+
+      document.addEventListener('click', function (ev) {
+        var chip = ev.target.closest('[data-popular]');
+        if (!chip) return;
+
+        var input = document.getElementById('spotlight-input');
+        if (!input) return;
+
+        var setter = Object.getOwnPropertyDescriptor(
+          window.HTMLInputElement.prototype,
+          'value'
+        ).set;
+        setter.call(input, chip.getAttribute('data-popular'));
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.focus();
+      });
+
+      // "Tampilkan N kategori lainnya" — hanya relevan di mobile; di desktop
+      // tombolnya disembunyikan CSS dan semua kartu memang sudah tampil.
+      document.addEventListener('click', function (ev) {
+        if (!ev.target.closest('#cat-more')) return;
+        var grid = document.getElementById('cat-grid');
+        var btn = document.getElementById('cat-more');
+        if (!grid || !btn) return;
+        grid.classList.add('is-expanded');
+        btn.hidden = true;
+      });
+    }
+  </script>
+
+</Base>

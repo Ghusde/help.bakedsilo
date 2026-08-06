@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx @21st-dev/cli@latest init --client claude)",
+      "mcp__21st__get_component",
+      "Bash(node -e ' *)",
+      "Bash(grep -nE \"#[0-9a-fA-F]{3,6}|rgba?\\\\\\(\" public/style.css)",
+      "Bash(grep -vE \"rgba\\\\\\(255,255,255|/\\\\*\")"
+    ]
+  }
+}

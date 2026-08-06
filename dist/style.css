@@ -1,0 +1,595 @@
+/* Font di-load lewat <link rel="preconnect"> + <link rel="stylesheet"> di Base.astro
+   (bukan @import) supaya tidak bikin request waterfall yang blocking. */
+
+:root{
+  /* Satu keluarga font untuk seluruh situs. Token ini dipertahankan supaya
+     aturan judul tidak perlu diubah satu per satu kalau nanti berubah lagi. */
+  --font-display:'Inter',sans-serif;
+  --ease-out-soft:cubic-bezier(.22,1,.36,1);
+  --ease-spring:cubic-bezier(.34,1.56,.64,1);
+
+  --ink:#15130f;
+  --ink-soft:#242019;
+  --paper:#f6f1e6;
+  --white:#ffffff;
+  /* surface = permukaan kartu/panel, surface-2 = permukaan sekunder.
+     Dipakai juga oleh utility Tailwind di komponen React. */
+  --surface:#ffffff;
+  --surface-2:#f6f1e6;
+  --rust:#a63f2e;
+  --rust-dark:#832f22;
+  --rust-bright:#e2705a;
+  --sand:#d8c6a0;
+  --sand-soft:#ece2c8;
+  /* #8a8375 yang lama cuma 3.34:1 di atas --paper (di bawah minimum WCAG 4.5).
+     #736d5e lulus di --paper (4.57) maupun putih (5.15). */
+  --stone:#736d5e;
+  --line:#e4ddcb;
+  --line-dark:#332c22;
+  --radius:10px;
+  --shadow:0 1px 2px rgba(21,19,15,.06), 0 8px 24px -12px rgba(21,19,15,.18);
+
+  /* >>> WARNA IKON KATEGORI <<<
+     Ubah SATU baris ini untuk mengganti warna kesepuluh ikon PNG sekaligus.
+     Contoh: #D85A30 (clay) · #993C1D (clay-dark) · var(--ink) (hitam) */
+  --icon-color:var(--ink);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-size:15px;
+  line-height:1.6;
+  padding-top:60px;   /* HARUS sama dengan h-[60px] pada <header> di Base.astro */
+  font-family:'Inter',sans-serif;
+  color:var(--ink);
+  background:var(--paper);
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit}
+
+.sr-only{
+  position:absolute;
+  width:1px;height:1px;
+  padding:0;margin:-1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  white-space:nowrap;
+  border:0;
+}
+
+.eyebrow{
+  font-family:'Inter',sans-serif;
+  font-size:11px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--rust);
+  font-weight:500;
+}
+
+/* ---------- Topbar ----------
+   Header di-restyle penuh lewat utility Tailwind di Base.astro.
+   Tidak ada aturan visual di sini lagi — lihat komentar di body{padding-top}
+   soal ketergantungan tinggi header. */
+
+/* ---------- Hero / search ---------- */
+.hero{
+  /* Foto latar + overlay gelap. Kepekatan overlay BUKAN angka selera:
+     toraja.jpg rata-rata gelap (17%) tapi memuat piksel putih murni, dan di
+     atas putih itu overlay harus minimal .80 supaya subjudul (mist) dan chip
+     "Populer" (clay-light) tetap lolos kontras 4.5:1. Di bawah .80 keduanya
+     gagal terbaca saat kebetulan jatuh di area terang foto. */
+  background:
+    linear-gradient(180deg,
+      rgba(9,8,6,.85) 0%,
+      rgba(9,8,6,.80) 50%,
+      rgba(9,8,6,.87) 100%),
+    url('images/toraja.jpg') center / cover no-repeat;
+  color:var(--paper);
+  padding:34px 28px 42px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  /* TIDAK pakai overflow:hidden — panel hasil pencarian Spotlight mengembang
+     melewati batas bawah hero dan akan terpotong kalau di-clip. */
+}
+
+.hero-inner{max-width:820px;margin:0 auto;position:relative;z-index:1;text-align:center}
+.hero h1{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:clamp(30px,4vw,42px);
+  line-height:1.15;
+  letter-spacing:-.02em;
+  margin:0 0 6px;
+  text-wrap:balance;
+}
+/* HARUS `> p` (anak langsung), bukan `.hero p`. Kalau pakai descendant,
+   aturan ini ikut membajak setiap <p> di dalam komponen Spotlight —
+   label & deskripsi hasil jadi krem di atas panel putih dan dapat margin 34px. */
+.hero-inner > p{
+  color:#B4B2A9;                /* mist */
+  font-size:16px;
+  line-height:1.5;
+  margin:0 0 20px;
+}
+
+/* --- rotating word --- */
+.word-rotator{
+  display:inline-block;
+  vertical-align:bottom;
+}
+.wr-slot{
+  display:grid;
+  overflow:hidden;
+  /* ruang buat descender (j, p) supaya gak kepotong overflow:hidden */
+  padding:.04em .07em .16em;
+  margin:0 -.07em -.16em;
+}
+.wr-word{
+  grid-area:1/1;
+  color:#D85A30;                /* clay — satu-satunya perubahan pada judul */
+  white-space:nowrap;
+  animation:wordCycle 6s var(--ease-out-soft) infinite backwards;
+  animation-delay:calc(var(--i) * 2s);
+}
+/* 3 kata x 2s = 6s. Tiap kata dapat jatah 33.33% dari total durasi. */
+@keyframes wordCycle{
+  0%          {opacity:0; transform:translateY(.9em);}
+  5%,28%      {opacity:1; transform:translateY(0);}
+  33.33%,100% {opacity:0; transform:translateY(-.9em);}
+}
+
+/* --- entrance stagger --- */
+.reveal{
+  animation:heroReveal .7s var(--ease-out-soft) backwards;
+  animation-delay:var(--d,0ms);
+}
+@keyframes heroReveal{
+  from{opacity:0; transform:translateY(18px); filter:blur(6px);}
+  to  {opacity:1; transform:translateY(0);    filter:blur(0);}
+}
+
+/* ---------- Spotlight (overlay-nya React island, styling via Tailwind) ---------- */
+body.spot-lock{overflow:hidden}
+
+/* --- perangkat kecil: animasi lebih murah --- */
+@media(max-width:520px){
+  .hero{padding:26px 20px 34px}
+  @keyframes heroReveal{
+    from{opacity:0; transform:translateY(12px);}
+    to  {opacity:1; transform:translateY(0);}
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .reveal,.wr-word{animation:none}
+  .wr-word{opacity:0}
+  .wr-word:first-child{opacity:1}
+}
+
+/* ---------- Section / category grid ---------- */
+.section{max-width:1180px;margin:0 auto;padding:22px 28px 46px}
+.section-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px}
+.section-head h2{font-size:18px;font-weight:600;color:#2C2C2A;margin:0;letter-spacing:-.01em}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+/* Tetap 2 kolom sampai layar terkecil — sesuai mockup mobile. */
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
+
+.cat-card{
+  background:#fff;
+  border-radius:10px;
+  padding:18px;
+  display:block;
+  cursor:pointer;
+  position:relative;
+  transition:background .18s ease;
+  animation:fadeUp .4s ease backwards;
+}
+.cat-card:hover{
+  background:#FCFAF6;
+}
+
+
+.cat-card:nth-child(1){animation-delay:.02s}
+.cat-card:nth-child(2){animation-delay:.05s}
+.cat-card:nth-child(3){animation-delay:.08s}
+.cat-card:nth-child(4){animation-delay:.11s}
+.cat-card:nth-child(5){animation-delay:.14s}
+.cat-card:nth-child(6){animation-delay:.17s}
+.cat-card:nth-child(7){animation-delay:.20s}
+.cat-card:nth-child(8){animation-delay:.23s}
+.cat-card:nth-child(9){animation-delay:.26s}
+.cat-card:nth-child(10){animation-delay:.29s}
+
+@keyframes fadeUp{
+  from{opacity:0; transform:translateY(8px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+.cat-icon{
+  display:block;
+  color:var(--ink);
+  margin-bottom:8px;
+}
+
+.cat-icon svg{width:17px;height:17px}
+
+/* ---------- Ikon kategori berbasis gambar ----------
+   PNG-nya dirender sebagai CSS mask, BUKAN <img>. Bentuknya diambil dari
+   alpha channel file, warnanya dari background-color. Efeknya: warna semua
+   ikon dikendalikan satu variabel di bawah ini — tidak perlu meng-export
+   ulang file satu per satu.
+
+   Syaratnya file harus punya transparansi (siluet solid + latar transparan).
+   Kesepuluh PNG saat ini sudah memenuhi. Kalau nanti ada ikon multi-warna,
+   mask akan meratakannya jadi satu warna — untuk kasus itu pakai <img> biasa. */
+.cat-icon.is-image{
+  display:block;
+  width:17px;
+  height:17px;
+  background-color:var(--icon-color);
+  -webkit-mask:var(--icon) center / contain no-repeat;
+  mask:var(--icon) center / contain no-repeat;
+}
+.cat-icon.is-image.is-lg{width:22px;height:22px}
+.cat-card .label{display:block;font-size:15px;font-weight:500;line-height:1.4;color:#2C2C2A}
+.cat-card .count{display:block;font-size:13px;color:var(--stone);margin-top:3px}
+
+.start-icon svg{width:17px;height:17px}
+
+/* Entrance sama persis dengan .cat-card (keyframes fadeUp), supaya kedua
+   deretan kartu terasa satu bahasa. */
+.start-card{animation:fadeUp .4s ease backwards}
+.start-card:nth-child(1){animation-delay:.02s}
+.start-card:nth-child(2){animation-delay:.08s}
+.start-card:nth-child(3){animation-delay:.14s}
+
+/* Strip "Baru di BAKED": scrollbar disembunyikan supaya bersih, tapi
+   scroll-nya tetap jalan (touch, trackpad, dan keyboard via fokus link). */
+.start-rail{scrollbar-width:none;-ms-overflow-style:none}
+.start-rail::-webkit-scrollbar{display:none}
+@media(min-width:641px){
+  .start-rail{scrollbar-width:auto}
+}
+
+/* Tombol "Tampilkan N kategori lainnya" hanya untuk mobile. */
+.cat-more{display:none}
+@media(max-width:640px){
+  .cat-more{display:block}
+  /* Kartu ke-5 dan seterusnya disembunyikan sampai tombolnya ditekan. */
+  .grid:not(.is-expanded) .cat-card:nth-child(n+5){display:none}
+}
+
+/* ---------- Breadcrumb ---------- */
+.crumb{
+  max-width:1180px;margin:0 auto;padding:18px 28px 0;
+  font-size:13px;color:var(--stone);
+  display:flex;gap:6px;align-items:center;
+}
+.crumb a:hover{color:var(--rust)}
+.crumb .sep{color:var(--line)}
+.crumb .current{color:var(--ink);font-weight:500}
+
+/* ---------- Category topic list (accordion) ---------- */
+.page-head{max-width:1080px;margin:22px auto 0;padding:0 28px}
+.page-head .eyebrow{display:block;margin-bottom:8px}
+.page-head h1{font-family:var(--font-display);font-weight:700;letter-spacing:-.02em;font-size:32px;margin:0}
+
+.topics{max-width:1080px;margin:0 auto;padding:28px 28px 90px}
+.topics h3{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--stone);margin:0 0 12px}
+
+.acc-item{
+  background:var(--white);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  margin-bottom:10px;
+  overflow:hidden;
+}
+.acc-trigger{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  background:none;
+  border:none;
+  padding:18px 20px;
+  font-size:15px;
+  font-weight:600;
+  text-align:left;
+  cursor:pointer;
+  color:var(--ink);
+}
+.acc-trigger .chev{
+  width:26px;height:26px;flex:none;
+  border-radius:50%;
+  background:var(--rust);
+  color:var(--white);
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .2s ease;
+}
+.acc-item.open .acc-trigger .chev{transform:rotate(180deg)}
+.acc-panel{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .25s ease;
+  border-top:1px solid transparent;
+}
+.acc-item.open .acc-panel{border-top-color:var(--line)}
+.acc-panel-inner{padding:6px 20px 16px}
+.acc-panel-inner a{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:9px 4px;
+  font-size:13.5px;
+  color:var(--ink-soft);
+  border-radius:6px;
+}
+.acc-panel-inner a:hover{color:var(--rust)}
+.acc-panel-inner a::before{
+  content:"";
+  width:5px;height:5px;
+  border-radius:50%;
+  background:var(--sand);
+  flex:none;
+}
+
+/* ---------- Category page: page head with icon ---------- */
+.page-head-row{
+  max-width:1180px;margin:22px auto 0;padding:0 28px;
+  display:flex;align-items:center;gap:14px;
+}
+.page-head-row h1{
+  font-family:var(--font-display);
+  font-weight:600;
+  letter-spacing:-.02em;
+  font-size:28px;
+  color:#2C2C2A;
+  margin:0;
+}
+.page-head-count{
+  font-size:13px;
+  color:var(--stone);
+  margin-left:2px;
+}
+@media(max-width:560px){
+  .page-head-row{flex-wrap:wrap}
+  .page-head-row h1{font-size:22px}
+}
+
+/* ---------- Tombol Kembali (plain text link) ---------- */
+.back-link{
+  font-size:13.5px;
+  margin-left:auto;            /* .crumb pakai flex -> ini mendorongnya ke ujung kanan */
+  flex:none;
+  display:inline-flex;
+  align-items:center;
+  gap:3px;
+  font-weight:500;
+  color:var(--ink-soft);
+  transition:color .15s ease;
+}
+.back-link:hover,
+.back-link:focus-visible{color:var(--rust)}
+.back-link svg{
+  width:15px;height:15px;
+  transition:transform .15s ease;
+}
+.back-link:hover svg,
+.back-link:focus-visible svg{transform:translateX(-2px)}
+
+@media(prefers-reduced-motion:reduce){
+  .back-link svg{transition:none}
+  .back-link:hover svg{transform:none}
+}
+.page-head-icon{
+  width:42px;height:42px;border-radius:10px;
+  background:#fff;color:var(--ink);
+  display:flex;align-items:center;justify-content:center;flex:none;
+}
+.page-head-icon svg{width:22px;height:22px}
+
+/* ---------- Grouped menu list ---------- */
+.menu-groups{max-width:1180px;margin:0 auto;padding:20px 28px 70px;display:flex;flex-direction:column;gap:22px}
+.group-block .group-header{
+  font-size:12px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:#2C2C2A;
+  font-weight:500;
+  background:#EFEAE0;
+  display:inline-block;
+  padding:4px 10px;
+  border-radius:5px;
+  margin-bottom:10px;
+}
+.menu-list{
+  background:#fff;
+  border-radius:10px;
+  overflow:hidden;
+}
+.menu-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:13px 16px;
+  font-size:14.5px;
+  font-weight:500;
+  color:#2C2C2A;
+  border-bottom:1px solid #EFEAE0;
+  transition:background .12s ease;
+}
+.menu-list .menu-row:last-child{border-bottom:none}
+a.menu-row:hover{background:#FCFAF6}
+
+/* Item yang belum punya artikel: tetap terlihat, tapi jelas belum bisa dibuka. */
+.menu-row.is-pending{color:var(--stone);cursor:default}
+.menu-row.is-pending .menu-icon{
+  width:30px;height:30px;flex:none;
+  border-radius:7px;
+  background:#F5F0E6;
+  color:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+}
+.menu-icon{
+  width:30px;height:30px;flex:none;
+  border-radius:7px;
+  background:var(--paper);
+  color:var(--rust);
+  display:flex;align-items:center;justify-content:center;
+}
+.menu-icon svg{width:15px;height:15px}
+.menu-row span:nth-child(2){flex:1}
+.menu-arrow{color:var(--stone)}
+.menu-arrow svg{width:13px;height:13px}
+
+/* ---------- Article layout ---------- */
+.article-shell{
+  max-width:1240px;
+  margin:0 auto;
+  padding:24px 28px 100px;
+  display:grid;
+  grid-template-columns:260px 1fr 220px;
+  gap:36px;
+  align-items:start;
+}
+@media(max-width:980px){
+  .article-shell{grid-template-columns:1fr}
+}
+
+.side-nav{
+  background:#fff;
+  border-radius:10px;
+  padding:18px 16px;
+  position:sticky;
+  top:80px;                        /* header 60px + jeda 20px */
+  max-height:calc(100vh - 100px);
+  overflow:auto;
+}
+.side-nav .cat-title{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:15px;
+  color:#2C2C2A;
+  padding:4px 6px 12px;
+  border-bottom:1px solid #E8E2D6;
+  margin-bottom:10px;
+}
+.side-nav details{margin-bottom:2px}
+.side-nav summary{
+  list-style:none;
+  cursor:pointer;
+  padding:9px 8px;
+  font-size:14px;
+  font-weight:600;
+  border-radius:7px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.side-nav summary::-webkit-details-marker{display:none}
+.side-nav summary:hover{background:var(--paper)}
+.side-nav summary .arrow{color:var(--stone);font-size:11px;transition:transform .15s ease}
+.side-nav details[open] summary .arrow{transform:rotate(90deg)}
+.side-nav ul{list-style:none;margin:0;padding:2px 0 8px 14px}
+.side-nav li a{
+  display:block;
+  padding:7px 10px;
+  font-size:13.5px;
+  color:var(--ink-soft);
+  border-left:2px solid var(--line);
+  border-radius:0 6px 6px 0;
+}
+.side-nav li a:hover{color:var(--rust);border-color:var(--sand)}
+.side-nav li a.active{
+  color:var(--rust);
+  font-weight:600;
+  border-color:var(--rust);
+  background:var(--paper);
+}
+
+.article-main{background:#fff;border-radius:10px;padding:32px 36px}
+.article-main h1{font-family:var(--font-display);font-weight:500;letter-spacing:-.02em;font-size:26px;color:#2C2C2A;margin:0 0 6px;line-height:1.25}
+.article-main .lede{color:var(--stone);font-size:16px;line-height:1.6;margin:0 0 26px}
+.step{
+  border-left:3px solid #993C1D;   /* clay-dark */
+  padding:2px 0 2px 16px;
+  margin:22px 0;
+}
+.step b{display:block;font-size:14px;margin-bottom:4px}
+.step p{margin:0;font-size:14px;line-height:1.65;color:var(--ink-soft)}
+.article-main .shot{
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:10px;
+  background:var(--paper);
+  margin:18px 0;
+  font-family:'Inter',sans-serif;
+  font-size:11.5px;
+  color:var(--stone);
+  text-align:center;
+}
+
+.toc{position:sticky;top:80px}
+.toc-box{background:#fff;border-radius:10px;padding:16px}
+.toc-box .eyebrow{display:block;margin-bottom:10px}
+.toc-box ul{list-style:none;margin:0;padding:0}
+.toc-box li a{
+  display:block;
+  padding:6px 0;
+  font-size:13px;
+  color:var(--stone);
+  border-left:2px solid var(--line);
+  padding-left:10px;
+}
+.toc-box li a:hover{color:var(--rust);border-color:var(--rust)}
+
+footer{
+  text-align:center;
+  padding:28px;
+  font-size:12.5px;
+  color:var(--stone);
+  border-top:1px solid var(--line);
+}
+
+/* ---------- Markdown content di dalam .article-main ---------- */
+.article-main h2{
+  border-left:3px solid #993C1D;
+  padding-left:16px;
+  margin:30px 0 10px;
+  font-size:17px;
+  font-weight:600;
+  color:#2C2C2A;
+}
+.article-main p{
+  margin:0 0 16px;
+  padding-left:19px;
+  font-size:15.5px;
+  line-height:1.75;
+  color:var(--ink-soft);
+}
+.article-main img{
+  display:block;
+  max-width:100%;
+  border:1px solid var(--line);
+  border-radius:8px;
+  margin:14px 0 18px 19px;
+}
+/* ---------- Reduced motion (harus di AKHIR file) ----------
+   Spesifisitasnya sama dengan aturan animasi di atas (0,1,0), jadi yang
+   menentukan adalah urutan. Kalau blok ini ditaruh sebelum deklarasi
+   `animation:fadeUp`, override-nya kalah dan preferensi user diabaikan. */
+@media(prefers-reduced-motion:reduce){
+  .cat-card,
+  .start-card{animation:none}
+  .start-rail{scroll-behavior:auto}
+}

@@ -1,0 +1,99 @@
+---
+import { getCollection, render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import { CATEGORIES } from "../../data/categories.js";
+import BackLink from "../../components/BackLink.astro";
+
+export async function getStaticPaths() {
+  const articles = await getCollection("artikel");
+  return articles.map(a => ({ params: { slug: a.slug }, props: { article: a } }));
+}
+
+const { article } = Astro.props;
+const { Content, headings } = await render(article);
+
+const cat = CATEGORIES.find(c => c.slug === article.data.category);
+const catLabel = cat?.label ?? article.data.category;
+
+// --- Sidebar: dibangun dari content collection, BUKAN dari SUBMENUS ---
+// Konsekuensinya menambah satu file .md baru langsung memunculkannya di
+// sidebar tanpa menyentuh kode apa pun. Sebelumnya sidebar memakai daftar
+// menu hardcode, sehingga 109 dari 110 tautannya mengarah ke halaman kosong.
+const all = await getCollection("artikel");
+const siblings = all
+  .filter(a => a.data.category === article.data.category)
+  .sort((a, b) => (a.data.order ?? 9999) - (b.data.order ?? 9999));
+
+const groups = [];
+for (const a of siblings) {
+  const name = a.data.group ?? catLabel;
+  let g = groups.find(x => x.name === name);
+  if (!g) {
+    g = { name, items: [] };
+    groups.push(g);
+  }
+  g.items.push(a);
+}
+
+// Grup yang memuat artikel aktif dibuka secara default.
+const activeGroup = article.data.group ?? catLabel;
+
+// TOC otomatis dari heading di body markdown. h2 = langkah utama.
+const tocHeadings = headings.filter(h => h.depth === 2);
+
+const summary = article.data.description ?? article.data.lede;
+---
+<Base title={`${article.data.title} — Pusat Bantuan BAKED.`}>
+
+  <div class="crumb">
+    <a href="/">Pusat Bantuan</a>
+    <span class="sep">/</span>
+    <a href={`/kategori/${article.data.category}`}>{catLabel}</a>
+    <span class="sep">/</span>
+    <span class="current">{article.data.title}</span>
+    <BackLink href="/" />
+  </div>
+
+  <div class="article-shell">
+
+    <aside class="side-nav">
+      <div class="cat-title">{catLabel}</div>
+      {groups.map(g => (
+        <details open={g.name === activeGroup}>
+          <summary>{g.name} <span class="arrow">&rsaquo;</span></summary>
+          <ul>
+            {g.items.map(a => (
+              <li>
+                <a
+                  href={`/artikel/${a.slug}`}
+                  class:list={{ active: a.slug === article.slug }}
+                >{a.data.title}</a>
+              </li>
+            ))}
+          </ul>
+        </details>
+      ))}
+    </aside>
+
+    <main class="article-main">
+      <h1>{article.data.title}</h1>
+      {summary && <p class="lede">{summary}</p>}
+      <Content />
+    </main>
+
+    {tocHeadings.length > 0 && (
+      <aside class="toc">
+        <div class="toc-box">
+          <span class="eyebrow">Daftar Isi</span>
+          <ul>
+            {tocHeadings.map(h => (
+              <li><a href={`#${h.slug}`}>{h.text}</a></li>
+            ))}
+          </ul>
+        </div>
+      </aside>
+    )}
+
+  </div>
+
+</Base>

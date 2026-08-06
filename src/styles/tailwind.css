@@ -1,0 +1,5 @@
+/* Sengaja TANPA `@tailwind base` — layer base itulah preflight, yang akan
+   me-reset margin heading/border/dll dan merusak public/style.css yang sudah ada.
+   Utility-nya tetap penuh, cuma reset globalnya yang dilewati. */
+@tailwind components;
+@tailwind utilities;

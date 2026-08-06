@@ -1,0 +1,109 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import { CATEGORIES, SUBMENUS, ICONS } from "../../data/categories.js";
+import { articleSlug } from "../../data/article-slug.js";
+import { categoryIcon } from "../../data/category-icon.js";
+import BackLink from "../../components/BackLink.astro";
+
+export function getStaticPaths() {
+  return CATEGORIES.map(c => ({ params: { slug: c.slug } }));
+}
+
+const { slug } = Astro.params;
+const cat = CATEGORIES.find(c => c.slug === slug)!;
+const sections = SUBMENUS[cat.slug] || [];
+const catArt = categoryIcon(cat.slug, cat.icon);
+
+// Kumpulan artikel yang BENAR-BENAR ada. Dipakai untuk menentukan item mana
+// yang boleh jadi tautan — sebelumnya semua item di-link, padahal mayoritas
+// belum punya file .md sehingga berujung 404.
+const articles = await getCollection("artikel");
+const available = new Set(articles.map(a => a.slug));
+
+const groups = sections.map(sec => ({
+  header: sec.header,
+  items: sec.items.map(it => {
+    const target = articleSlug(cat.slug, it.l, sec.header);
+    return {
+      label: it.l,
+      icon: ICONS[it.i] || ICONS.dot,
+      href: available.has(target) ? `/artikel/${target}` : null,
+    };
+  }),
+}));
+
+// Artikel yang ada di collection tapi tidak terdaftar di SUBMENUS akan
+// hilang dari halaman ini kalau tidak ditangani. Kumpulkan sisanya supaya
+// tidak ada artikel yang tak bisa ditemukan.
+const listed = new Set(
+  sections.flatMap(sec => sec.items.map(it => articleSlug(cat.slug, it.l, sec.header)))
+);
+const extras = articles
+  .filter(a => a.data.category === cat.slug && !listed.has(a.slug))
+  .sort((a, b) => (a.data.order ?? 9999) - (b.data.order ?? 9999));
+
+if (extras.length) {
+  groups.push({
+    header: "Panduan lainnya",
+    items: extras.map(a => ({
+      label: a.data.title,
+      icon: ICONS.doc,
+      href: `/artikel/${a.slug}`,
+    })),
+  });
+}
+
+const readyCount = groups.reduce(
+  (n, g) => n + g.items.filter(i => i.href).length,
+  0
+);
+const totalCount = groups.reduce((n, g) => n + g.items.length, 0);
+---
+<Base title={`${cat.label} — Pusat Bantuan BAKED.`}>
+
+  <div class="crumb">
+    <a href="/">Pusat Bantuan</a>
+    <span class="sep">/</span>
+    <span class="current">{cat.label}</span>
+    <BackLink href="/" />
+  </div>
+
+  <div class="page-head-row">
+    {catArt.src
+      ? <span class="page-head-icon"><span class="cat-icon is-image is-lg" style={`--icon:url('${catArt.src}')`} /></span>
+      : <span class="page-head-icon" set:html={catArt.svg} />}
+    <h1>{cat.label}</h1>
+    <span class="page-head-count">{readyCount} dari {totalCount} panduan siap</span>
+  </div>
+
+  <div class="menu-groups">
+    {groups.map(g => (
+      <div class="group-block">
+        {g.header && <div class="group-header">{g.header}</div>}
+        <div class="menu-list">
+          {g.items.map(it =>
+            it.href ? (
+              <a class="menu-row" href={it.href}>
+                <span class="menu-icon" set:html={it.icon} />
+                <span>{it.label}</span>
+                <span class="menu-arrow">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+                </span>
+              </a>
+            ) : (
+              /* Belum ada file .md-nya. Dirender sebagai teks, bukan tautan —
+                 strukturnya tetap terlihat tanpa mengirim user ke 404. */
+              <div class="menu-row is-pending" aria-disabled="true">
+                <span class="menu-icon" set:html={it.icon} />
+                <span>{it.label}</span>
+                <span class="menu-soon">segera</span>
+              </div>
+            )
+          )}
+        </div>
+      </div>
+    ))}
+  </div>
+
+</Base>
