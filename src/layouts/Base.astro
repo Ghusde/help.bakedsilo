@@ -1,11 +1,28 @@
 ---
 import { ViewTransitions } from "astro:transitions";
 import "../styles/tailwind.css";
+import { CATEGORIES } from "../data/categories.js";
+import BakedAIChat from "../components/BakedAIChat.tsx";
 
 export interface Props {
   title: string;
 }
 const { title } = Astro.props;
+
+// Footer dibangun dari data yang sudah ada — tidak ada daftar kategori
+// yang ditulis ulang di sini, jadi menambah kategori di src/data/categories.js
+// otomatis muncul di footer juga.
+const half = Math.ceil(CATEGORIES.length / 2);
+const footerCols = [CATEGORIES.slice(0, half), CATEGORIES.slice(half)];
+
+// Semua tautan di bawah menunjuk ke tujuan yang benar-benar ada.
+// Tidak ada ikon sosial media di sini karena project belum punya URL-nya —
+// lebih baik kosong daripada tombol yang tidak ke mana-mana.
+const FOOTER_LINKS = [
+  { label: "Beranda pusat bantuan", href: "/" },
+  { label: "Hubungi support", href: "mailto:it.support@baked.co.id" },
+  { label: "BAKEDSILO", href: "https://bakedsilo.com/", external: true },
+];
 ---
 <!DOCTYPE html>
 <html lang="id">
@@ -44,7 +61,7 @@ const { title } = Astro.props;
 
       <nav class="flex items-center">
         <a
-          href="mailto:support@baked.id"
+          href="mailto:it.support@baked.co.id"
           class="rounded-lg border-[0.5px] border-solid border-line-dark px-[13px] py-[7px] text-[13px] font-medium text-white transition-colors duration-150 hover:border-clay"
         >Hubungi support</a>
       </nav>
@@ -53,5 +70,84 @@ const { title } = Astro.props;
 
   <slot />
 
-  <footer>&copy; 2026 BAKED. Seluruh hak cipta dilindungi.</footer>
+  <!-- border-solid wajib di seluruh footer: preflight Tailwind dimatikan,
+       jadi utility `border-t` sendirian tidak menggambar garis apa pun. -->
+  <footer class="site-footer mt-16 bg-ink text-mist">
+    <div class="mx-auto w-full max-w-[1180px] px-6 py-14 sm:px-9 lg:px-12">
+
+      <div class="flex flex-col gap-12 lg:flex-row lg:gap-16">
+
+        <!-- Kolom merek -->
+        <div class="lg:w-[280px] lg:flex-none">
+          <a href="/" class="inline-flex items-center" aria-label="BAKED — Pusat Bantuan">
+            <img src="/images/BAKED.png" alt="BAKED" class="block h-[56px] w-auto" />
+          </a>
+          <p class="mt-2 max-w-[280px] text-[13px] leading-relaxed text-mist">
+            Pusat bantuan untuk seluruh modul BAKED dari panduan, alur kerja,
+            dan penjelasan laporan dalam satu tempat.
+          </p>
+        </div>
+
+        <!-- Kategori: dipecah dua kolom supaya tidak jadi satu tiang panjang -->
+        <nav class="flex-1" aria-labelledby="footer-cat-title">
+          <h2 id="footer-cat-title" class="mb-4 text-[12px] font-semibold uppercase tracking-[0.12em] text-mist-light">
+            Kategori
+          </h2>
+          <div class="grid grid-cols-1 gap-x-8 gap-y-2 sm:grid-cols-2">
+            {footerCols.map(col => (
+              <ul class="m-0 flex list-none flex-col gap-2 p-0">
+                {col.map(c => (
+                  <li>
+                    <a
+                      href={`/kategori/${c.slug}`}
+                      class="text-[13.5px] text-mist transition-colors duration-150 hover:text-white"
+                    >{c.label}</a>
+                  </li>
+                ))}
+              </ul>
+            ))}
+          </div>
+        </nav>
+
+        <!-- Bantuan -->
+        <nav class="lg:w-[210px] lg:flex-none" aria-labelledby="footer-help-title">
+          <h2 id="footer-help-title" class="mb-4 text-[12px] font-semibold uppercase tracking-[0.12em] text-mist-light">
+            Bantuan
+          </h2>
+          <ul class="m-0 flex list-none flex-col gap-2 p-0">
+            {FOOTER_LINKS.map(l => (
+              <li>
+                <a
+                  href={l.href}
+                  {...(l.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  class="inline-flex items-center gap-1.5 text-[13.5px] text-mist transition-colors duration-150 hover:text-white"
+                >
+                  {l.label}
+                  {l.external && (
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3">
+                      <path d="M7 17 17 7M9 7h8v8" />
+                    </svg>
+                  )}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+      </div>
+
+      <!-- border-x-0 / border-b-0 WAJIB: preflight dimatikan, jadi tidak ada
+           reset `border-width:0`. `border-solid` sendiri menyalakan gaya garis
+           di KEEMPAT sisi, dan tiga sisi lain langsung memakai lebar default
+           browser (medium ~3px) -> muncul kotak mengelilingi teks. -->
+      <div class="mt-12 border-x-0 border-b-0 border-t border-solid border-line-dark pt-6 text-center text-[12.5px] text-mist">
+        &copy; 2026 BAKED. Seluruh hak cipta dilindungi.
+      </div>
+    </div>
+  </footer>
+
+  {/* client:idle — widget chat tidak dibutuhkan saat halaman baru dibuka,
+      jadi JS-nya menunggu browser senggang dulu. Ini menjaga waktu muat
+      halaman tetap ringan. */}
+  <BakedAIChat client:idle />
 </body>

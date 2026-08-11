@@ -9,7 +9,12 @@
       "Bash(cp public/style.css /tmp/style.bak)",
       "Bash(cp public/style.css \"C:/Users/BAKEDB~1/AppData/Local/Temp/claude/c--Users-baked-bali-Desktop-Baked-Help-Support-BAKEDASTRO/e595dce3-c44e-4e73-a88b-cb0d9c62e59d/scratchpad/style.bak\")",
       "Bash(sed -i 's/  --icon-color:var\\(--ink\\);/  --icon-color:#D85A30;/' public/style.css)",
-      "Bash(sed -i 's/  --icon-color:#D85A30;/  --icon-color:var\\(--ink\\);/' public/style.css)"
+      "Bash(sed -i 's/  --icon-color:#D85A30;/  --icon-color:var\\(--ink\\);/' public/style.css)",
+      "Skill(claude-api)",
+      "Skill(claude-api:*)",
+      "Bash(npx astro *)",
+      "Bash(curl -s -o /dev/null -w \"home %{http_code}\\\\n\" http://localhost:4321/)",
+      "Bash(python -c ' *)"
     ]
   }
 }

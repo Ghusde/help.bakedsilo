@@ -33,6 +33,13 @@
      Ubah SATU baris ini untuk mengganti warna kesepuluh ikon PNG sekaligus.
      Contoh: #D85A30 (clay) · #993C1D (clay-dark) · var(--ink) (hitam) */
   --icon-color:var(--ink);
+
+  /* >>> CHIP IKON (kotak di belakang ikon) <<<
+     Dipakai seragam di kartu kategori, baris sub-menu, dan kartu "Mulai
+     dari sini". Card bisa menimpanya lewat --cat-bg/--cat-fg kalau suatu
+     saat ada kategori yang perlu warna sendiri. */
+  --chip-bg:#F2F1ED;
+  --chip-fg:var(--ink);
 }
 
 *{box-sizing:border-box}
@@ -177,25 +184,68 @@ body.spot-lock{overflow:hidden}
 
 .grid{
   display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:10px;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
 }
-/* Tetap 2 kolom sampai layar terkecil — sesuai mockup mobile. */
 @media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
+/* Di bawah 620px kartunya horizontal, jadi 1 kolom supaya teks tidak
+   terjepit di sebelah chip. */
+@media(max-width:620px){.grid{grid-template-columns:1fr}}
 
 .cat-card{
   background:#fff;
-  border-radius:10px;
-  padding:18px;
-  display:block;
+  border-radius:12px;
+  padding:20px;
+  display:flex;
+  align-items:center;
+  gap:16px;
   cursor:pointer;
   position:relative;
-  transition:background .18s ease;
+  /* isolation:isolate WAJIB. Tanpa ini .cat-card tidak membentuk stacking
+     context (z-index-nya auto), sehingga z-index:1 pada .cat-chip/.cat-text
+     lolos ke konteks root dan bersaing dengan .hero-inner (z-index:1).
+     Karena kartu berada lebih akhir di DOM, kartu menang dan menimpa
+     dropdown pencarian. isolate mengurung z-index itu di dalam kartu. */
+  isolation:isolate;
+  /* overflow:hidden -> layer fill tidak keluar dari sudut membulat kartu */
+  overflow:hidden;
+  transition:transform .2s ease-out, box-shadow .2s ease-out;
   animation:fadeUp .4s ease backwards;
 }
+
+/* --- hover: lift --- */
 .cat-card:hover{
-  background:#FCFAF6;
+  transform:translateY(-6px);
+  box-shadow:0 10px 20px rgba(0,0,0,.15);
 }
+
+/* --- hover: color fill yang tumbuh dari bawah --- */
+.cat-fill{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  background:var(--cat-bg);
+  transform:scaleY(0);
+  transform-origin:bottom;
+  transition:transform .25s ease-out;
+  pointer-events:none;
+}
+.cat-card:hover .cat-fill{transform:scaleY(1)}
+
+/* Konten harus di ATAS layer warna, kalau tidak akan tertimbun saat fill naik. */
+.cat-chip,
+.cat-text{position:relative;z-index:1}
+
+/* --- hover: ikon & judul ikut warna aksen kategori --- */
+.cat-card .label,
+.cat-chip,
+.cat-chip .cat-icon.is-image{
+  transition:color .2s ease, background-color .2s ease;
+}
+.cat-card:hover .label{color:var(--cat-fg)}
+.cat-card:hover .cat-chip{background:#fff}
+.cat-card:hover .cat-chip .cat-icon.is-image{background-color:var(--cat-fg)}
+.cat-card:hover .cat-chip .cat-icon{color:var(--cat-fg)}
 
 
 .cat-card:nth-child(1){animation-delay:.02s}
@@ -240,30 +290,65 @@ body.spot-lock{overflow:hidden}
   mask:var(--icon) center / contain no-repeat;
 }
 .cat-icon.is-image.is-lg{width:22px;height:22px}
-.cat-card .label{display:block;font-size:15px;font-weight:500;line-height:1.4;color:#2C2C2A}
-.cat-card .count{display:block;font-size:13px;color:var(--stone);margin-top:3px}
 
-.start-icon svg{width:17px;height:17px}
-
-/* Entrance sama persis dengan .cat-card (keyframes fadeUp), supaya kedua
-   deretan kartu terasa satu bahasa. */
-.start-card{animation:fadeUp .4s ease backwards}
-.start-card:nth-child(1){animation-delay:.02s}
-.start-card:nth-child(2){animation-delay:.08s}
-.start-card:nth-child(3){animation-delay:.14s}
-
-/* Strip "Baru di BAKED": scrollbar disembunyikan supaya bersih, tapi
-   scroll-nya tetap jalan (touch, trackpad, dan keyboard via fokus link). */
-.start-rail{scrollbar-width:none;-ms-overflow-style:none}
-.start-rail::-webkit-scrollbar{display:none}
-@media(min-width:641px){
-  .start-rail{scrollbar-width:auto}
+/* ---------- Chip ikon ----------
+   Warna default dari --chip-bg/--chip-fg di :root. Kalau sebuah card
+   menanam --cat-bg/--cat-fg sendiri, nilai itu yang menang — jadi warna
+   per-kategori tetap mungkin tanpa mengubah CSS ini. */
+.cat-chip{
+  width:40px;
+  height:40px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--chip-bg);
+  margin-bottom:10px;
+  flex:none;
 }
+/* Menang atas .cat-icon.is-image (0,3,0 vs 0,2,0), jadi di dalam chip
+   warnanya ikut chip, bukan --icon-color global. */
+.cat-chip .cat-icon.is-image{
+  width:20px;
+  height:20px;
+  margin-bottom:0;
+  background-color:var(--chip-fg);
+}
+/* Ikon SVG (fallback / kartu "Mulai dari sini") di dalam chip. */
+.cat-chip .cat-icon{margin-bottom:0;color:var(--chip-fg)}
+.cat-chip svg{width:20px;height:20px}
+
+/* Kartu kategori memakai chip versi besar (layout horizontal). Kartu
+   "Mulai dari sini" tetap 40px karena bentuknya vertikal dan lebih ringkas. */
+.cat-card .cat-chip{
+  width:56px;
+  height:56px;
+  border-radius:14px;
+  margin-bottom:0;
+}
+.cat-card .cat-chip .cat-icon.is-image{width:28px;height:28px}
+.cat-card .cat-chip svg{width:28px;height:28px}
+.cat-card .label{display:block;font-size:17px;font-weight:600;line-height:1.35;letter-spacing:-.01em;color:#2C2C2A}
+.cat-card .count{display:block;font-size:14.5px;color:var(--stone);margin-top:4px}
+
+
+
 
 /* Tombol "Tampilkan N kategori lainnya" hanya untuk mobile. */
 .cat-more{display:none}
+.cat-more-chev{
+  width:15px;height:15px;
+  flex:none;
+  transition:transform .2s ease-out;
+}
+/* Panah membalik saat daftar terbuka — penanda visual bahwa tombolnya toggle,
+   bukan aksi sekali pakai. */
+.cat-more[aria-expanded="true"] .cat-more-chev{transform:rotate(180deg)}
+@media(prefers-reduced-motion:reduce){
+  .cat-more-chev{transition:none}
+}
 @media(max-width:640px){
-  .cat-more{display:block}
+  .cat-more{display:flex}
   /* Kartu ke-5 dan seterusnya disembunyikan sampai tombolnya ditekan. */
   .grid:not(.is-expanded) .cat-card:nth-child(n+5){display:none}
 }
@@ -392,8 +477,9 @@ body.spot-lock{overflow:hidden}
   .back-link:hover svg{transform:none}
 }
 .page-head-icon{
-  width:42px;height:42px;border-radius:10px;
-  background:#fff;color:var(--ink);
+  width:44px;height:44px;border-radius:10px;
+  background:var(--chip-bg);
+  color:var(--chip-fg);
   display:flex;align-items:center;justify-content:center;flex:none;
 }
 .page-head-icon svg{width:22px;height:22px}
@@ -434,10 +520,10 @@ a.menu-row:hover{background:#FCFAF6}
 /* Item yang belum punya artikel: tetap terlihat, tapi jelas belum bisa dibuka. */
 .menu-row.is-pending{color:var(--stone);cursor:default}
 .menu-row.is-pending .menu-icon{
-  width:30px;height:30px;flex:none;
-  border-radius:7px;
-  background:#F5F0E6;
-  color:var(--ink);
+  width:32px;height:32px;flex:none;
+  border-radius:8px;
+  background:var(--chip-bg);
+  color:var(--chip-fg);
   display:flex;align-items:center;justify-content:center;
 }
 .menu-icon{
@@ -447,7 +533,7 @@ a.menu-row:hover{background:#FCFAF6}
   color:var(--rust);
   display:flex;align-items:center;justify-content:center;
 }
-.menu-icon svg{width:15px;height:15px}
+.menu-icon svg{width:16px;height:16px}
 .menu-row span:nth-child(2){flex:1}
 .menu-arrow{color:var(--stone)}
 .menu-arrow svg{width:13px;height:13px}
@@ -553,13 +639,9 @@ a.menu-row:hover{background:#FCFAF6}
 }
 .toc-box li a:hover{color:var(--rust);border-color:var(--rust)}
 
-footer{
-  text-align:center;
-  padding:28px;
-  font-size:12.5px;
-  color:var(--stone);
-  border-top:1px solid var(--line);
-}
+/* Footer sekarang punya layout sendiri (utility Tailwind di Base.astro).
+   Aturan global lama dihapus karena `text-align:center` + `border-top` terang
+   ikut diwariskan ke seluruh isi footer gelap yang baru. */
 
 /* ---------- Markdown content di dalam .article-main ---------- */
 .article-main h2{
@@ -577,19 +659,220 @@ footer{
   line-height:1.75;
   color:var(--ink-soft);
 }
+/* Gambar SELALU berada di dalam <p> hasil markdown, dan <p> itu sudah punya
+   padding-left:19px. Karena itu img tidak boleh punya margin-left lagi —
+   sebelumnya indentasinya jadi dobel (38px) dan gambar tidak sejajar teks. */
 .article-main img{
   display:block;
   max-width:100%;
   border:1px solid var(--line);
   border-radius:8px;
-  margin:14px 0 18px 19px;
+  margin:16px 0 10px;
+}
+
+/* Caption gambar. Ditulis di markdown sebagai baris miring TEPAT di bawah
+   baris gambar (tanpa baris kosong), supaya keduanya jadi satu paragraf:
+
+     ![alt](/images/artikel/foo.svg)
+     *Keterangan gambar.*                                                    */
+.article-main img + em{
+  display:block;
+  font-style:normal;
+  font-size:13px;
+  line-height:1.6;
+  color:var(--stone);
+}
+
+.article-main h3{
+  margin:24px 0 8px;
+  padding-left:19px;
+  font-size:15px;
+  font-weight:600;
+  color:#2C2C2A;
+}
+
+.article-main a{
+  color:#993C1D;
+  text-decoration:underline;
+  text-underline-offset:2px;
+  text-decoration-thickness:1px;
+  transition:color .15s ease-out;
+}
+.article-main a:hover{color:#D85A30}
+
+.article-main strong{font-weight:600;color:var(--ink)}
+
+/* Daftar. margin-left 19px menyamakan awal teks dengan paragraf; padding-left
+   memberi ruang untuk bullet-nya sendiri. */
+.article-main ul,
+.article-main ol{
+  margin:0 0 18px 19px;
+  padding-left:20px;
+  font-size:15.5px;
+  line-height:1.75;
+  color:var(--ink-soft);
+}
+.article-main li{margin-bottom:7px}
+.article-main li:last-child{margin-bottom:0}
+.article-main li::marker{color:#D85A30}
+.article-main li > ul,
+.article-main li > ol{margin:7px 0 0;padding-left:20px}
+
+/* Callout — ditulis di markdown sebagai blockquote (>) */
+.article-main blockquote{
+  margin:20px 0 20px 19px;
+  padding:14px 18px;
+  border:0;
+  border-left:3px solid #D85A30;
+  border-radius:0 8px 8px 0;
+  background:#FBF8F2;
+}
+.article-main blockquote p{
+  padding-left:0;
+  margin:0;
+  font-size:14.5px;
+  line-height:1.7;
+}
+.article-main blockquote p + p{margin-top:8px}
+.article-main blockquote strong{color:#993C1D}
+
+/* Tabel referensi */
+.article-main table{
+  width:calc(100% - 19px);
+  margin:6px 0 22px 19px;
+  border-collapse:collapse;
+  font-size:14px;
+  line-height:1.6;
+}
+.article-main thead th{
+  text-align:left;
+  padding:10px 14px;
+  background:#FBF8F2;
+  border-bottom:1px solid var(--line);
+  font-weight:600;
+  color:#2C2C2A;
+  white-space:nowrap;
+}
+.article-main tbody td{
+  padding:10px 14px;
+  border-bottom:1px solid var(--line);
+  color:var(--ink-soft);
+  vertical-align:top;
+}
+.article-main tbody tr:last-child td{border-bottom:0}
+
+/* Layar sempit: kalau tabelnya tetap terlalu lebar, biarkan TABELNYA yang
+   digeser sendiri — halaman tidak ikut melar ke samping. Teks di dalam sel
+   tetap boleh membungkus (bukan nowrap), supaya kalimat panjang tidak
+   memaksa scroll horizontal yang tidak perlu. */
+@media(max-width:620px){
+  .article-main table{display:block;overflow-x:auto}
+  .article-main thead th{white-space:normal}
+}
+
+.article-main hr{
+  margin:28px 0 28px 19px;
+  border:0;
+  border-top:1px solid var(--line);
+}
+
+.article-main code{
+  padding:2px 6px;
+  border-radius:5px;
+  background:#F2F1ED;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:.9em;
+  color:#993C1D;
 }
 /* ---------- Reduced motion (harus di AKHIR file) ----------
    Spesifisitasnya sama dengan aturan animasi di atas (0,1,0), jadi yang
    menentukan adalah urutan. Kalau blok ini ditaruh sebelum deklarasi
    `animation:fadeUp`, override-nya kalah dan preferensi user diabaikan. */
 @media(prefers-reduced-motion:reduce){
-  .cat-card,
-  .start-card{animation:none}
-  .start-rail{scroll-behavior:auto}
+  .cat-card{animation:none}
+}
+
+/* Hover kartu kategori dimatikan saat user meminta gerak minimal.
+   Ditaruh di akhir file supaya menang atas deklarasi di atas. */
+@media(prefers-reduced-motion:reduce){
+  .cat-card{transition:none}
+  .cat-card:hover{transform:none}
+  .cat-fill{transition:none}
+}
+
+/* ---------- Banner aplikasi utama ----------
+   Latar = tangkapan layar halaman depan bakedsilo.com, ditaruh di
+   public/images/bakedsilo-preview.jpg (atau .png/.webp). Selama file itu
+   belum ada, --shot tidak diset dan banner memakai gradien polos —
+   tampil rapi, hanya tanpa foto. */
+.site-banner{
+  position:relative;
+  display:block;
+  margin-top:22px;
+  border-radius:20px;
+  overflow:hidden;
+  aspect-ratio:1600 / 490;
+  background:
+    linear-gradient(105deg, rgba(9,8,6,.78) 0%, rgba(9,8,6,.45) 45%, rgba(9,8,6,.65) 100%),
+    var(--shot, linear-gradient(120deg, #2b2723 0%, #15130f 60%, #3a3129 100%));
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  color:#fff;
+}
+
+.site-banner-copy{
+  position:absolute;
+  top:clamp(20px, 4.4vw, 44px);
+  left:clamp(20px, 4vw, 44px);
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.site-banner-eyebrow{
+  font-size:clamp(10px, 1.1vw, 13px);
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  font-weight:500;
+  color:rgba(255,255,255,.82);
+}
+.site-banner-title{
+  font-family:var(--font-display);
+  font-size:clamp(26px, 5vw, 56px);
+  font-weight:600;
+  letter-spacing:-.02em;
+  line-height:1.05;
+}
+
+/* Tombol putih di kanan bawah — visual saja, kliknya ditangani <a> induk. */
+.site-banner-cta{
+  position:absolute;
+  right:clamp(16px, 2.6vw, 32px);
+  bottom:clamp(16px, 2.6vw, 32px);
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:clamp(9px, 1.1vw, 13px) clamp(16px, 1.8vw, 24px);
+  border-radius:999px;
+  background:#fff;
+  color:var(--ink);
+  font-size:clamp(11px, 1.05vw, 13px);
+  font-weight:600;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  white-space:nowrap;
+  pointer-events:none;
+  transition:transform .2s ease-out;
+}
+.site-banner-cta svg{width:14px;height:14px;flex:none}
+.site-banner:hover .site-banner-cta{transform:translateY(-2px)}
+
+/* Layar sempit: rasio dibuat lebih tinggi supaya judul dan tombol tidak
+   saling menabrak. */
+@media(max-width:620px){
+  .site-banner{aspect-ratio:4 / 3}
+}
+@media(prefers-reduced-motion:reduce){
+  .site-banner-cta{transition:none}
+  .site-banner:hover .site-banner-cta{transform:none}
 }

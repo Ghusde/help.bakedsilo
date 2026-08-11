@@ -1,10 +1,12 @@
 ---
+import fs from "node:fs";
+import path from "node:path";
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
-import { CATEGORIES, SUBMENUS, ICONS } from "../data/categories.js";
+import { CATEGORIES, SUBMENUS } from "../data/categories.js";
 import SpotlightIsland from "../components/SpotlightIsland.tsx";
 import { buildSearchIndex } from "../data/search-index.js";
-import { articleHref, articleSlug } from "../data/article-slug.js";
+import { articleSlug } from "../data/article-slug.js";
 import { categoryIcon } from "../data/category-icon.js";
 
 // Index pencarian dibangun dengan daftar artikel yang benar-benar ada, supaya
@@ -50,27 +52,47 @@ const ROTATING_WORDS = ["jawaban", "panduan", "bantuan"];
 // user ke layar kosong. Angka = jumlah hasil saat ini.
 const POPULAR = ["dashboard", "sales", "asset"];
 
-// "Mulai dari sini" diambil dari data asli — 3 menu pertama kategori pembuka.
-// Tidak ada field estimasi waktu baca di schema content collection, jadi baris
-// kedua memakai nama kategori.
 // Tujuan tombol support. ISI DI SINI kalau sudah punya nomor/URL-nya —
 // tombol WhatsApp sengaja tidak dirender selama `whatsapp` masih kosong,
 // daripada mengirim user ke link mati.
 const SUPPORT = {
   whatsapp: "",                        // contoh: "https://wa.me/628123456789"
-  form: "mailto:support@baked.id",     // ganti ke URL form kalau sudah ada
+  form: "mailto:it.support@baked.co.id",     // ganti ke URL form kalau sudah ada
 };
 
 // Jumlah kartu kategori yang tampil di mobile sebelum "Tampilkan lainnya".
 const MOBILE_VISIBLE = 4;
 
-const startCat = CATEGORIES[0];
-const startSection = SUBMENUS[startCat.slug]?.[0];
-const startItems = (startSection?.items ?? []).slice(0, 3).map(it => ({
-  label: it.l,
-  icon: ICONS[it.i] || ICONS.dot,
-  href: articleHref(startCat.slug, it.l, startSection?.header),
-}));
+// Banner promosi aplikasi utama. Gambarnya = tangkapan layar halaman depan
+// bakedsilo.com. Taruh filenya di public/images/ dengan salah satu nama di
+// bawah; kalau belum ada, banner tetap tampil dengan latar gradien polos
+// (tidak rusak, hanya tanpa foto).
+const BANNER = {
+  href: "https://bakedsilo.com/",
+  eyebrow: "Kunjungi",
+  title: "BAKEDSILO",
+  cta: "Kunjungi situs",
+};
+const BANNER_IMG = ["bakedsilo-preview.jpg", "bakedsilo-preview.png", "bakedsilo-preview.webp"]
+  .map(n => `public/images/${n}`)
+  .find(p => fs.existsSync(path.join(process.cwd(), p)))
+  ?.replace("public", "");
+
+// Warna per kategori — HANYA dipakai untuk layer fill saat hover; chip-nya
+// sendiri tetap abu seragam. Setiap pasangan sudah diuji kontras: judul,
+// teks meta, dan warna aksen semuanya lolos 4.5:1 di atas warna fill-nya.
+const CAT_COLORS = {
+  "dashboard-overview":      { bg: "#F2F1FE", fg: "#3C3489" },
+  "financial-assets":        { bg: "#E7F5EC", fg: "#1F6B42" },
+  "project-management":      { bg: "#FFF1E3", fg: "#96490F" },
+  "operations-management":   { bg: "#FDECEC", fg: "#A02C2C" },
+  "procurement-management":  { bg: "#E9F2FD", fg: "#1D4E89" },
+  "tspoonbaked":             { bg: "#FCF3DC", fg: "#7D5F08" },
+  "customer-sales":          { bg: "#FDEFF7", fg: "#93245F" },
+  "human-resources":         { bg: "#E6F4F6", fg: "#155E69" },
+  "documents-communication": { bg: "#F4F3EF", fg: "#3A3730" },
+  "system-tools":            { bg: "#F2F0FB", fg: "#46389B" },
+};
 ---
 <Base title="Pusat Bantuan — BAKED.">
 
@@ -102,21 +124,6 @@ const startItems = (startSection?.items ?? []).slice(0, 3).map(it => ({
     </div>
   </div>
 
-  <section class="bg-cream px-7 pb-2 pt-[18px]">
-    <div class="mx-auto max-w-[1180px]">
-      <h2 class="m-0 mb-4 text-[18px] font-semibold tracking-[-0.01em] text-charcoal">Baru di BAKED? Mulai dari sini</h2>
-      <!-- Mobile: strip yang bisa digeser (snap per kartu). Desktop: grid 3 kolom. -->
-      <div class="start-rail flex snap-x snap-mandatory gap-[10px] overflow-x-auto sm:grid sm:grid-cols-3 sm:overflow-x-visible">
-        {startItems.map(it => (
-          <a href={it.href} class="start-card block min-w-[62%] shrink-0 snap-start rounded-[10px] bg-white p-4 sm:min-w-0 sm:shrink">
-            <span class="start-icon block text-ink" set:html={it.icon} />
-            <span class="mt-2 block text-[15px] font-medium text-charcoal">{it.label}</span>
-            <span class="mt-[3px] block text-[13px] text-stone">{startCat.label}</span>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
 
   <div class="section" id="kategori">
     <div class="section-head">
@@ -126,25 +133,73 @@ const startItems = (startSection?.items ?? []).slice(0, 3).map(it => ({
     </div>
 
     <div class="grid" id="cat-grid" data-visible={MOBILE_VISIBLE}>
-      {cards.map(c => (
-        <a class="cat-card" href={`/kategori/${c.slug}`}>
-          {c.art.src
-            ? <span class="cat-icon is-image" style={`--icon:url('${c.art.src}')`} />
-            : <span class="cat-icon" set:html={c.art.svg} />}
-          <span>
-            <span class="label">{c.label}</span>
-            <span class="count">{c.count} menu</span>
-          </span>
-        </a>
-      ))}
+      {cards.map(c => {
+        const col = CAT_COLORS[c.slug] ?? { bg: "var(--chip-bg)", fg: "var(--ink)" };
+        return (
+          <a
+            class="cat-card"
+            href={`/kategori/${c.slug}`}
+            style={`--cat-bg:${col.bg};--cat-fg:${col.fg}`}
+          >
+            {/* Layer warna yang "tumbuh" dari bawah saat hover. aria-hidden
+                karena murni dekoratif dan tidak boleh dibaca screen reader. */}
+            <span class="cat-fill" aria-hidden="true" />
+            <span class="cat-chip">
+              {c.art.src
+                ? <span class="cat-icon is-image" style={`--icon:url('${c.art.src}')`} />
+                : <span class="cat-icon" set:html={c.art.svg} />}
+            </span>
+            <span class="cat-text">
+              <span class="label">{c.label}</span>
+              <span class="count">{c.count} menu</span>
+            </span>
+          </a>
+        );
+      })}
     </div>
 
-    <!-- Hanya tampil di mobile (lihat .cat-more di style.css). -->
+    {/* Hanya tampil di mobile (lihat .cat-more di style.css).
+        Kedua label ditaruh di data-* supaya jumlahnya tetap ikut data,
+        tidak di-hardcode di dalam script. */}
     <button
       type="button"
       id="cat-more"
-      class="cat-more mt-[10px] w-full cursor-pointer rounded-[10px] border-[0.5px] border-solid border-line-warm bg-transparent py-[12px] text-[13.5px] font-medium text-stone"
-    >Tampilkan {cards.length - MOBILE_VISIBLE} kategori lainnya</button>
+      class="cat-more mt-[10px] flex w-full cursor-pointer items-center justify-center gap-[6px] border-none bg-transparent py-[12px] text-[13.5px] font-medium text-stone"
+      aria-controls="cat-grid"
+      aria-expanded="false"
+      data-show={`Tampilkan ${cards.length - MOBILE_VISIBLE} kategori lainnya`}
+      data-hide={`Sembunyikan ${cards.length - MOBILE_VISIBLE} kategori`}
+    >
+      <span data-cat-more-label>Tampilkan {cards.length - MOBILE_VISIBLE} kategori lainnya</span>
+      <svg class="cat-more-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9" />
+      </svg>
+    </button>
+
+    {/* Banner aplikasi utama. Seluruh kartu adalah tautan; tombol putih di
+        kanan bawah murni visual (pointer-events-none) supaya tidak ada
+        tautan bersarang di dalam tautan. */}
+    <a
+      href={BANNER.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="site-banner"
+      style={BANNER_IMG ? `--shot:url('${BANNER_IMG}')` : undefined}
+    >
+      <span class="site-banner-copy">
+        <span class="site-banner-eyebrow">{BANNER.eyebrow}</span>
+        <span class="site-banner-title">{BANNER.title}</span>
+      </span>
+
+      <span class="site-banner-cta">
+        {BANNER.cta}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="7" y1="17" x2="17" y2="7" /><polyline points="7 7 17 7 17 17" />
+        </svg>
+      </span>
+    </a>
   </div>
 
   <section class="px-7 pb-10">
@@ -208,8 +263,18 @@ const startItems = (startSection?.items ?? []).slice(0, 3).map(it => ({
         var grid = document.getElementById('cat-grid');
         var btn = document.getElementById('cat-more');
         if (!grid || !btn) return;
-        grid.classList.add('is-expanded');
-        btn.hidden = true;
+
+        var expanded = grid.classList.toggle('is-expanded');
+        var label = btn.querySelector('[data-cat-more-label]');
+        if (label) label.textContent = expanded ? btn.dataset.hide : btn.dataset.show;
+        btn.setAttribute('aria-expanded', String(expanded));
+
+        // Saat ditutup, tombolnya ikut naik bersama grid yang menyusut.
+        // Kalau posisinya jadi di atas layar, user kehilangan konteks —
+        // jadi digulirkan balik ke tombolnya.
+        if (!expanded && btn.getBoundingClientRect().top < 0) {
+          btn.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        }
       });
     }
   </script>
