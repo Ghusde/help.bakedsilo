@@ -1,1 +1,35 @@
-node_modules
+# Dependency
+# JANGAN commit folder ini. Selain bikin repo membengkak, isinya mengandung
+# binary khusus platform (@esbuild/win32-x64, @img/sharp-win32-x64,
+# @rollup/rollup-win32-x64-*) yang tidak bisa jalan di server Linux Vercel.
+# Selain itu Git di Windows (core.fileMode=false) tidak merekam bit
+# executable, sehingga node_modules/.bin/* sampai di Vercel dalam mode 644
+# dan `npm run build` berhenti dengan exit code 126 (Permission denied).
+# Vercel cukup menjalankan `npm ci` memakai package-lock.json.
+node_modules/
+
+# Catatan: dist/ SENGAJA belum dimasukkan ke sini. Folder itu masih
+# ter-track di git (126 file) dan bukan penyebab kegagalan build. Kalau
+# nanti mau dibuang juga, jalankan `git rm -r --cached dist` lebih dulu
+# lalu tambahkan `dist/` di baris ini — menambahkannya tanpa untrack
+# tidak ada efeknya, karena .gitignore tidak berlaku untuk file yang
+# sudah ter-track.
+
+# Cache internal Astro & Vercel
+.astro/
+.vercel/
+
+# Environment. API key TIDAK BOLEH masuk repo (lihat BAKEDAI.md).
+.env
+.env.*
+!.env.example
+
+# Log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
