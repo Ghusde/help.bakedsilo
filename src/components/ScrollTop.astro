@@ -1,0 +1,59 @@
+---
+// Tombol "kembali ke atas" untuk laman baca user guide.
+//
+// Posisinya ditumpuk DI ATAS launcher chat (BakedAIChat), bukan di sampingnya:
+// launcher itu 56px pada bottom:24px/right:24px, jadi tombol ini mulai di
+// bottom:94px dengan sumbu kanan yang sama. z-index-nya sengaja di bawah chat
+// (50 lawan 60) supaya panel chat yang terbuka menutupi tombol ini, bukan
+// sebaliknya.
+//
+// Tanpa JS tombolnya tidak pernah muncul (atribut `hidden` baru dilepas oleh
+// script), jadi tidak ada tombol mati yang bisa diklik.
+---
+
+<button type="button" class="scroll-top" aria-label="Kembali ke atas" hidden>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M5 4h14" />
+    <path d="M12 20V9" />
+    <path d="m6 15 6-6 6 6" />
+  </svg>
+</button>
+
+<script is:inline>
+  (function () {
+    var btn = document.querySelector(".scroll-top");
+    if (!btn) return;
+
+    btn.hidden = false;
+
+    // Muncul setelah pembaca melewati kira-kira satu layar penuh.
+    var AMBANG = 400;
+    var menunggu = false;
+
+    function perbarui() {
+      menunggu = false;
+      if (window.scrollY > AMBANG) btn.setAttribute("data-show", "");
+      else btn.removeAttribute("data-show");
+    }
+
+    // Scroll bisa memicu puluhan kali per detik. rAF menahannya jadi satu
+    // pembaruan per frame supaya tidak membebani thread utama.
+    window.addEventListener(
+      "scroll",
+      function () {
+        if (menunggu) return;
+        menunggu = true;
+        requestAnimationFrame(perbarui);
+      },
+      { passive: true }
+    );
+
+    perbarui();
+
+    btn.addEventListener("click", function () {
+      var kurangiGerak = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollTo({ top: 0, behavior: kurangiGerak ? "auto" : "smooth" });
+    });
+  })();
+</script>

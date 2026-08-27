@@ -224,6 +224,19 @@ export default function BakedAIChat({
   }, []);
   useEffect(resize, [draft, open, resize]);
 
+  /* --- kunci scroll latar saat panel penuh layar di mobile --- */
+  useEffect(() => {
+    if (!open) return;
+    const mq = window.matchMedia("(max-width: 640px)");
+    const apply = () => document.body.classList.toggle("bai-lock", mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => {
+      mq.removeEventListener("change", apply);
+      document.body.classList.remove("bai-lock");
+    };
+  }, [open]);
+
   /* --- Esc menutup panel --- */
   useEffect(() => {
     if (!open) return;
@@ -287,7 +300,10 @@ export default function BakedAIChat({
   }, [greeting]);
 
   return (
-    <div className="bai-root fixed bottom-6 right-6 z-[60] flex flex-col items-end gap-3.5">
+    <div
+      className="bai-root fixed bottom-6 right-6 z-[60] flex flex-col items-end gap-3.5"
+      data-open={open ? "" : undefined}
+    >
       {/* Reset untuk preflight yang dimatikan + keyframes. Elemen <style>
           otomatis display:none, jadi tidak mengganggu layout. */}
       <style>{`
@@ -304,6 +320,34 @@ export default function BakedAIChat({
 .bai-scroll{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.18) transparent}
 .bai-scroll::-webkit-scrollbar{width:6px}
 .bai-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:999px}
+/* --- Mobile: panel penuh layar --- */
+@media (max-width:640px){
+  /* !important dipakai karena lebar & tinggi versi desktop ditulis sebagai
+     inline style pada elemen <section>, dan inline style menang atas aturan
+     CSS biasa. Nilai desktop sendiri tidak diubah sama sekali. */
+  .bai-panel{
+    position:fixed;
+    inset:0;
+    width:100%!important;
+    max-width:none!important;
+    height:100%!important;
+    border-radius:0;
+    /* Aman untuk poni & home indicator iOS. */
+    padding-top:env(safe-area-inset-top);
+    padding-bottom:env(safe-area-inset-bottom);
+    /* Skala 0.96 terasa aneh pada elemen sepenuh layar; diganti geser naik
+       saja. Durasi & easing tetap sama seperti desktop (260ms). */
+    animation-name:baiInFull;
+  }
+  @keyframes baiInFull{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+  /* Tombol bulat tidak perlu mengambang di atas panel yang sudah penuh layar;
+     penutupnya sudah ada di header (chevron + X) dan tombol Escape. */
+  .bai-root[data-open] .bai-launcher{display:none}
+}
+/* Latar tidak ikut ter-scroll saat panel penuh layar. Kelas SENGAJA terpisah
+   dari .spot-lock milik Spotlight supaya keduanya tidak saling mencabut. */
+body.bai-lock{overflow:hidden}
+
 @media (prefers-reduced-motion:reduce){
   .bai-panel,.bai-msg{animation:none}
   .bai-dot{animation:none;opacity:.55}
@@ -494,7 +538,7 @@ export default function BakedAIChat({
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-label={open ? `Tutup obrolan dengan ${agentName}` : `Buka obrolan dengan ${agentName}`}
-        className="flex h-14 w-14 items-center justify-center rounded-full shadow-2xl transition-transform duration-200 hover:-translate-y-0.5"
+        className="bai-launcher flex h-14 w-14 items-center justify-center rounded-full shadow-2xl transition-transform duration-200 hover:-translate-y-0.5"
         style={{ background: C.accent, color: C.text }}
       >
         {open ? <X size={24} /> : <MessageCircle size={24} />}

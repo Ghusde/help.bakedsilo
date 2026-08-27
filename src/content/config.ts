@@ -20,6 +20,15 @@ const artikel = defineCollection({
 
     // Urutan di sidebar. Yang tanpa order ditaruh paling belakang.
     order: z.number().optional(),
+
+    // Role yang relevan dengan artikel ini (mis. ["Admin", "Manager"]).
+    // Belum dirender di template. Didaftarkan di sini supaya nilainya
+    // tervalidasi dan tidak dibuang diam-diam oleh Zod.
+    role: z.array(z.string()).optional(),
+
+    // Gambar utama artikel, dipakai sebagai thumbnail. Path absolut
+    // menuju public/guides (lihat CONTENT_GUIDE.md bagian 3).
+    image: z.string().optional(),
   }),
 });
 

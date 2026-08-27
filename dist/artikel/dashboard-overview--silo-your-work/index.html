@@ -1,101 +1,113 @@
-<!DOCTYPE html><html lang="id"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Silo Your Work — Pusat Bantuan BAKED.</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"><link rel="stylesheet" href="/style.css"><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><link rel="stylesheet" href="/_astro/_slug_.3NWfoyx8.css"><script type="module" src="/_astro/hoisted.BScVxmeO.js"></script></head> <body> <!-- border-solid wajib: preflight Tailwind dimatikan, jadi `border-[0.5px]`
+<!DOCTYPE html><html lang="id"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Silo Your Work — Pusat Bantuan BAKED.</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"><link rel="stylesheet" href="/style.css"><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><link rel="stylesheet" href="/_astro/_slug_.BrLDqRmz.css"><script type="module" src="/_astro/hoisted.BScVxmeO.js"></script></head> <body> <!-- border-solid wajib: preflight Tailwind dimatikan, jadi `border-[0.5px]`
        saja tidak akan terlihat (border-style default = none). --> <!-- Tinggi dikunci h-12 (48px), bukan lewat padding: tinggi header ini jadi
        acuan body{padding-top} dan offset sticky, jadi harus deterministik dan
        tidak ikut berubah kalau metrik font berubah. --> <header class="topbar fixed top-0 left-0 right-0 z-40 h-[60px] bg-ink"> <!-- Sengaja TANPA max-width: header full-bleed, jadi logo menempel ke tepi
          kiri dan tombol ke tepi kanan. Konten halaman di bawahnya tetap
-         dibatasi 1180px. --> <div class="flex h-full w-full items-center justify-between gap-4 px-6 sm:px-9 lg:px-12"> <a href="/" class="flex items-center" aria-label="BAKED — Pusat Bantuan">  <img src="/images/BAKED.png" alt="BAKED" class="block h-[60px] w-auto"> </a> <nav class="flex items-center"> <a href="mailto:it.support@baked.co.id" class="rounded-lg border-[0.5px] border-solid border-line-dark px-[13px] py-[7px] text-[13px] font-medium text-white transition-colors duration-150 hover:border-clay">Hubungi support</a> </nav> </div> </header>  <div class="crumb"> <a href="/">Pusat Bantuan</a> <span class="sep">/</span> <a href="/kategori/dashboard-overview">Dashboard &amp; Overview</a> <span class="sep">/</span> <span class="current">Silo Your Work</span> <a href="/" class="back-link"> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <polyline points="15 6 9 12 15 18"></polyline> </svg> <span>Kembali</span> </a> </div> <div class="article-shell"> <aside class="side-nav"> <div class="cat-title">Dashboard &amp; Overview</div> <details open> <summary>Tutorial Cara Onboarding <span class="arrow">&rsaquo;</span></summary> <ul> <li> <a href="/artikel/dashboard-overview--registrasi-onboarding">Cara Melakukan Registrasi</a> </li><li> <a href="/artikel/dashboard-overview--silo-your-work" class="active">Silo Your Work</a> </li><li> <a href="/artikel/dashboard-overview--executive-overview">Executive Overview</a> </li><li> <a href="/artikel/dashboard-overview--outlet-dashboard">Outlet Dashboard</a> </li> </ul> </details> </aside> <main class="article-main"> <h1>Silo Your Work</h1> <p class="lede">Menyaring seluruh dashboard agar hanya menampilkan data dari unit yang jadi tanggung jawab Anda.</p> <p>Secara bawaan, dashboard BAKED menampilkan data <strong>seluruh unit</strong> sekaligus. Untuk
-manajer yang cuma memegang satu atau dua outlet, angka gabungan itu justru bikin
-susah — omzet unit sendiri tenggelam di antara unit lain.</p>
-<p><strong>Silo Your Work</strong> menyelesaikan itu. Anda pilih unit yang relevan sekali saja,
-lalu setiap grafik, tabel, dan angka ringkasan di Dashboard &#x26; Overview otomatis
-mengikuti pilihan tersebut.</p>
-<p>Perkiraan waktu: <strong>2 menit</strong>.</p>
-<h2 id="sebelum-mulai">Sebelum mulai</h2>
-<p>Pastikan tiga hal ini sudah beres:</p>
-<ul>
-<li>Akun Anda sudah aktif dan bisa masuk ke Dashboard &#x26; Overview.</li>
-<li>Anda punya akses ke minimal satu unit. Kalau daftar unitnya kosong saat
-Langkah 2, berarti akses belum diberikan — hubungi admin workspace Anda.</li>
-<li>Sudah menyelesaikan <a href="/artikel/dashboard-overview--registrasi-onboarding">Cara Melakukan Registrasi</a>.</li>
-</ul>
-<h2 id="langkah-1--buka-menu-silo-your-work">Langkah 1 — Buka menu Silo Your Work</h2>
-<p>Dari sidebar kiri, masuk ke <strong>Dashboard &#x26; Overview</strong>, lalu klik <strong>Silo Your Work</strong>
-di urutan paling atas.</p>
-<p><img src="/images/artikel/silo-01-buka-menu.svg" alt="Sidebar Dashboard &#x26; Overview dengan menu Silo Your Work disorot">
-<em>Menu Silo Your Work ada di urutan pertama pada grup Dashboard &#x26; Overview.</em></p>
-<h2 id="langkah-2--pilih-unit-yang-ingin-ditampilkan">Langkah 2 — Pilih unit yang ingin ditampilkan</h2>
-<p>Sebuah dialog akan terbuka berisi daftar unit yang boleh Anda akses. Centang unit
-yang ingin ditampilkan — <strong>boleh lebih dari satu</strong> — lalu klik <strong>Simpan silo</strong>.</p>
-<p><img src="/images/artikel/silo-02-pilih-unit.svg" alt="Dialog pemilihan unit dengan Berawa dan Canggu tercentang">
-<em>Memilih dua unit sekaligus akan menampilkan angka gabungan dari keduanya.</em></p>
-<blockquote>
-<p><strong>Catatan</strong>
-Kalau semua unit dicentang, hasilnya sama saja dengan tidak memakai silo sama
-sekali. Untuk mengembalikan tampilan ke seluruh unit, lebih rapi pakai tombol
-<strong>Reset silo</strong> di pojok kanan atas dialog.</p>
-</blockquote>
-<h2 id="langkah-3--pastikan-silo-sudah-aktif">Langkah 3 — Pastikan silo sudah aktif</h2>
-<p>Setelah disimpan, muncul label silo di bagian atas layar berisi nama unit yang
-sedang aktif. Label inilah penanda bahwa angka di halaman sudah tersaring.</p>
-<p><img src="/images/artikel/silo-03-dashboard-tersaring.svg" alt="Dashboard dengan label silo Berawa dan Canggu di bagian atas">
-<em>Selama label ini terlihat, semua widget di halaman hanya menghitung unit tersebut.</em></p>
-<p>Pilihan silo tersimpan di akun Anda, jadi tidak perlu diatur ulang setiap kali
-login. Silo juga ikut terbawa saat Anda berpindah antar menu di dalam Dashboard
-&#x26; Overview.</p>
-<h2 id="halaman-apa-saja-yang-ikut-tersaring">Halaman apa saja yang ikut tersaring</h2>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<table><thead><tr><th>Halaman</th><th>Ikut silo</th><th>Keterangan</th></tr></thead><tbody><tr><td>Executive Overview</td><td>Ya</td><td>Seluruh KPI dihitung ulang per unit terpilih.</td></tr><tr><td>Outlet Dashboard</td><td>Ya</td><td>Outlet di luar silo disembunyikan dari daftar.</td></tr><tr><td>Sales By Period</td><td>Ya</td><td>Grafik periode mengikuti unit terpilih.</td></tr><tr><td>Order Forecasting</td><td>Ya</td><td>Prediksi dihitung dari riwayat unit terpilih saja.</td></tr><tr><td>Financial &#x26; Assets</td><td>Tidak</td><td>Laporan keuangan punya filter entitasnya sendiri.</td></tr></tbody></table>
-<h2 id="kalau-hasilnya-tidak-sesuai">Kalau hasilnya tidak sesuai</h2>
-<p><strong>Angka tidak berubah setelah menyimpan.</strong>
-Muat ulang halaman satu kali. Beberapa widget menyimpan hasil hitungan
-sementara di browser dan baru menyegarkan diri setelah halaman dibuka ulang.</p>
-<p><strong>Daftar unit kosong di Langkah 2.</strong>
-Akun Anda belum ditautkan ke unit mana pun. Ini diatur dari sisi admin, bukan
-dari halaman ini.</p>
-<p><strong>Ada unit yang hilang dari daftar.</strong>
-Anda hanya melihat unit yang jadi hak akses Anda. Kalau ada unit yang mestinya
-muncul tapi tidak ada, mintakan aksesnya ke admin workspace.</p>
+         dibatasi 1180px. --> <div class="flex h-full w-full items-center justify-between gap-4 px-6 sm:px-9 lg:px-12"> <a href="/" class="flex items-center" aria-label="BAKED — Pusat Bantuan">  <img src="/images/BAKED.png" alt="BAKED" class="block h-[60px] w-auto"> </a> <nav class="flex items-center"> <a href="mailto:it.support@baked.co.id" class="rounded-lg border-[0.5px] border-solid border-line-dark px-[13px] py-[7px] text-[13px] font-medium text-white transition-colors duration-150 hover:border-clay">Hubungi support</a> </nav> </div> </header>  <div class="crumb"> <a href="/">Pusat Bantuan</a> <span class="sep">/</span> <a href="/kategori/dashboard-overview">Dashboard &amp; Overview</a> <span class="sep">/</span> <span class="current">Silo Your Work</span> <a href="/" class="back-link"> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <polyline points="15 6 9 12 15 18"></polyline> </svg> <span>Kembali</span> </a> </div> <div class="article-shell"> <aside class="side-nav"> <div class="cat-title">Dashboard &amp; Overview</div> <details open> <summary>Tutorial Cara Onboarding <span class="arrow">&rsaquo;</span></summary> <ul> <li> <a href="/artikel/dashboard-overview--registrasi-onboarding">Cara Melakukan Registrasi</a> </li><li> <a href="/artikel/dashboard-overview--silo-your-work" class="active">Silo Your Work</a> </li><li> <a href="/artikel/dashboard-overview--executive-overview">Executive Overview</a> </li><li> <a href="/artikel/dashboard-overview--outlet-dashboard">Outlet Dashboard</a> </li> </ul> </details> </aside> <main class="article-main"> <h1>Silo Your Work</h1>  <p>Silo Your Work adalah laman yang menampilkan informasi mengenai arah perusahaan,
+peta seluruh modul, jalur onboarding, serta kemampuan platform <strong>Baked.Silo</strong>.
+Seluruh isinya bersifat pengenalan, apabila Anda sedang mencari
+satu menu tertentu, gunakan pintasan Silo Map pada sisi kanan atas untuk
+langsung menuju peta fitur.</p>
+<h2 id="elemen-utama">Elemen Utama</h2>
+<ol>
+<li>
+<p><strong>Hero</strong>. Bagian pembuka yang memperkenalkan Baked.Silo secara singkat. Dari
+sini Anda dapat langsung masuk ke sistem melalui tautan <strong>Silo Starts here</strong>,
+atau melompat ke bagian lain pada laman ini lewat tiga pintasan di sisi kanan,
+yaitu <strong>New to BAKED ?</strong>, <strong>Capabilities</strong>, dan <strong>Silo Map</strong>.</p>
+<p><img src="/guides/dashboard-overview/silo-your-work/langkah-1.png" alt="Bagian hero laman Silo Your Work beserta tautan dan pintasan navigasinya"></p>
+<p><em>Empat angka pada bagian bawah merangkum skala sistem, mulai dari jumlah modul sampai jumlah pengguna.</em></p>
+</li>
+<li>
+<p><strong>Vision &#x26; Mission</strong>. Menjelaskan arah yang dituju BAKED beserta nilai yang
+dipegang dalam mencapainya. Anda bisa membaca lebih lanjut untuk memahami
+tujuan perusahaan.</p>
+<p><img src="/guides/dashboard-overview/silo-your-work/langkah-2.png" alt="Bagian Vision and Mission beserta daftar Core Values dan pernyataan misi"></p>
+<p><em>Vision beserta Core Values berada pada kolom kiri, sedangkan Mission berada pada kolom kanan.</em></p>
+</li>
+<li>
+<p><strong>Silo Map</strong>. Peta seluruh fitur Baked.Silo. Anda dapat mencari menu secara
+langsung pada kolom <strong>Search a feature</strong>, atau menelusurinya per modul apabila
+belum tahu nama menu yang dicari. Setiap modul digambarkan sebagai satu jalur,
+dan titik putih pada jalur menandai fitur yang tersambung ke modul lain.</p>
+<p><img src="/guides/dashboard-overview/silo-your-work/langkah-3.png" alt="Silo Map beserta kolom pencarian fitur dan jalur tiap modul"></p>
+<p><em>Kolom pencarian berada di tengah, dengan jalur tiap modul di bawahnya.</em></p>
+</li>
+<li>
+<p><strong>Automations &#x26; Integrations</strong>. Menunjukkan modul mana saja yang saling
+terhubung dan bekerja otomatis, misalnya jadwal maintenance yang langsung
+membuat task, atau data penjualan yang mengisi dashboard secara real time.
+Klik salah satu kartu untuk melihat koneksinya pada Silo Map.</p>
+<p><img src="/guides/dashboard-overview/silo-your-work/langkah-4.png" alt="Kartu Automations and Integrations beserta label jenis hubungannya"></p>
+<p><em>Setiap kartu memasangkan dua modul beserta jenis hubungannya.</em></p>
+</li>
+<li>
+<p><strong>Getting Started</strong>. Titik awal jalur onboarding karyawan baru. Bagian ini
+menerangkan apa saja yang perlu Anda ketahui pada hari pertama, dimulai dari
+tahap <strong>Head Office Immersion</strong>.</p>
+<p><img src="/guides/dashboard-overview/silo-your-work/langkah-5.png" alt="Bagian Getting Started yang memuat pengantar proses onboarding"></p>
+<p><em>Pengantar onboarding beserta tahap pertamanya.</em></p>
+</li>
+<li>
+<p><strong>Operations Immersion</strong>. Jadwal pelatihan outlet yang dibagi per hari. Anda
+dapat melihat materi yang dibahas, lama pelatihan, dan siapa yang mendampingi
+pada setiap tahapnya.</p>
+<p><img src="/guides/dashboard-overview/silo-your-work/langkah-6.png" alt="Tiga kartu tahap Operations Immersion"></p>
+<p><em>Tiga tahap pelatihan berurutan, mulai dari Day 1 sampai Day 3-5.</em></p>
+</li>
+<li>
+<p><strong>Capabilities</strong>. Ringkasan kemampuan utama platform, meliputi <strong>Unified
+Dashboard</strong>, <strong>Enterprise Integration</strong>, dan <strong>Advanced Security</strong>. Pilih
+<strong>Learn more</strong> pada kemampuan yang ingin Anda pelajari lebih jauh.</p>
+<p><img src="/guides/dashboard-overview/silo-your-work/langkah-7.png" alt="Bagian Capabilities beserta tiga kemampuan inti platform"></p>
+<p><em>Tiga kemampuan inti platform, masing-masing dengan tautan Learn more.</em></p>
+</li>
+</ol>
 <h2 id="selanjutnya">Selanjutnya</h2>
 <ul>
-<li><a href="/artikel/dashboard-overview--executive-overview">Executive Overview</a> — membaca
-KPI utama setelah silo aktif.</li>
-<li><a href="/artikel/dashboard-overview--outlet-dashboard">Outlet Dashboard</a> — menelusuri
-performa per outlet di dalam silo.</li>
-</ul> </main> <aside class="toc"> <div class="toc-box"> <span class="eyebrow">Daftar Isi</span> <ul> <li><a href="#sebelum-mulai">Sebelum mulai</a></li><li><a href="#langkah-1--buka-menu-silo-your-work">Langkah 1 — Buka menu Silo Your Work</a></li><li><a href="#langkah-2--pilih-unit-yang-ingin-ditampilkan">Langkah 2 — Pilih unit yang ingin ditampilkan</a></li><li><a href="#langkah-3--pastikan-silo-sudah-aktif">Langkah 3 — Pastikan silo sudah aktif</a></li><li><a href="#halaman-apa-saja-yang-ikut-tersaring">Halaman apa saja yang ikut tersaring</a></li><li><a href="#kalau-hasilnya-tidak-sesuai">Kalau hasilnya tidak sesuai</a></li><li><a href="#selanjutnya">Selanjutnya</a></li> </ul> </div> </aside> </div>  <!-- border-solid wajib di seluruh footer: preflight Tailwind dimatikan,
+<li><a href="/artikel/dashboard-overview--registrasi-onboarding">Cara Melakukan Registrasi</a>,
+apabila akun Anda belum aktif.</li>
+<li><a href="/artikel/dashboard-overview--executive-overview">Executive Overview</a> untuk
+membaca KPI utama lintas outlet.</li>
+<li><a href="/artikel/dashboard-overview--outlet-dashboard">Outlet Dashboard</a> untuk
+menelusuri performa tiap outlet.</li>
+</ul> </main> <aside class="toc"> <div class="toc-box"> <span class="eyebrow">Daftar Isi</span> <ul> <li><a href="#elemen-utama">Elemen Utama</a></li><li><a href="#selanjutnya">Selanjutnya</a></li> </ul> </div> </aside> </div> <button type="button" class="scroll-top" aria-label="Kembali ke atas" hidden> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <path d="M5 4h14"></path> <path d="M12 20V9"></path> <path d="m6 15 6-6 6 6"></path> </svg> </button> <script>
+  (function () {
+    var btn = document.querySelector(".scroll-top");
+    if (!btn) return;
+
+    btn.hidden = false;
+
+    // Muncul setelah pembaca melewati kira-kira satu layar penuh.
+    var AMBANG = 400;
+    var menunggu = false;
+
+    function perbarui() {
+      menunggu = false;
+      if (window.scrollY > AMBANG) btn.setAttribute("data-show", "");
+      else btn.removeAttribute("data-show");
+    }
+
+    // Scroll bisa memicu puluhan kali per detik. rAF menahannya jadi satu
+    // pembaruan per frame supaya tidak membebani thread utama.
+    window.addEventListener(
+      "scroll",
+      function () {
+        if (menunggu) return;
+        menunggu = true;
+        requestAnimationFrame(perbarui);
+      },
+      { passive: true }
+    );
+
+    perbarui();
+
+    btn.addEventListener("click", function () {
+      var kurangiGerak = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollTo({ top: 0, behavior: kurangiGerak ? "auto" : "smooth" });
+    });
+  })();
+</script>  <!-- border-solid wajib di seluruh footer: preflight Tailwind dimatikan,
        jadi utility `border-t` sendirian tidak menggambar garis apa pun. --> <footer class="site-footer mt-16 bg-ink text-mist"> <div class="mx-auto w-full max-w-[1180px] px-6 py-14 sm:px-9 lg:px-12"> <div class="flex flex-col gap-12 lg:flex-row lg:gap-16"> <!-- Kolom merek --> <div class="lg:w-[280px] lg:flex-none"> <a href="/" class="inline-flex items-center" aria-label="BAKED — Pusat Bantuan"> <img src="/images/BAKED.png" alt="BAKED" class="block h-[56px] w-auto"> </a> <p class="mt-2 max-w-[280px] text-[13px] leading-relaxed text-mist">
 Pusat bantuan untuk seluruh modul BAKED dari panduan, alur kerja,
             dan penjelasan laporan dalam satu tempat.
@@ -108,7 +120,7 @@ Bantuan
            di KEEMPAT sisi, dan tiga sisi lain langsung memakai lebar default
            browser (medium ~3px) -> muncul kotak mengelilingi teks. --> <div class="mt-12 border-x-0 border-b-0 border-t border-solid border-line-dark pt-6 text-center text-[12.5px] text-mist">
 &copy; 2026 BAKED. Seluruh hak cipta dilindungi.
-</div> </div> </footer>  <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var l=(o,t)=>{let i=async()=>{await(await o())()},e=typeof t.value=="object"?t.value:void 0,s={timeout:e==null?void 0:e.timeout};"requestIdleCallback"in window?window.requestIdleCallback(i,s):setTimeout(i,s.timeout||200)};(self.Astro||(self.Astro={})).idle=l;window.dispatchEvent(new Event("astro:idle"));})();;(()=>{var A=Object.defineProperty;var g=(i,o,a)=>o in i?A(i,o,{enumerable:!0,configurable:!0,writable:!0,value:a}):i[o]=a;var d=(i,o,a)=>g(i,typeof o!="symbol"?o+"":o,a);{let i={0:t=>m(t),1:t=>a(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(a(t)),5:t=>new Set(a(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>1/0*t},o=t=>{let[l,e]=t;return l in i?i[l](e):void 0},a=t=>t.map(o),m=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([l,e])=>[l,o(e)]));class y extends HTMLElement{constructor(){super(...arguments);d(this,"Component");d(this,"hydrator");d(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let c=this.querySelectorAll("astro-slot"),n={},h=this.querySelectorAll("template[data-astro-template]");for(let r of h){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(let r of c){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("name")||"default"]=r.innerHTML)}let p;try{p=this.hasAttribute("props")?m(JSON.parse(this.getAttribute("props"))):{}}catch(r){let s=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(s+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${s}`,this.getAttribute("props"),r),r}let u;await this.hydrator(this)(this.Component,p,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});d(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),c.disconnect(),this.childrenConnectedCallback()},c=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});c.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}async start(){let e=JSON.parse(this.getAttribute("opts")),c=this.getAttribute("client");if(Astro[c]===void 0){window.addEventListener(`astro:${c}`,()=>this.start(),{once:!0});return}try{await Astro[c](async()=>{let n=this.getAttribute("renderer-url"),[h,{default:p}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),u=this.getAttribute("component-export")||"default";if(!u.includes("."))this.Component=h[u];else{this.Component=h;for(let f of u.split("."))this.Component=this.Component[f]}return this.hydrator=p,this.hydrate},e,this)}catch(n){console.error(`[astro-island] Error hydrating ${this.getAttribute("component-url")}`,n)}}attributeChangedCallback(){this.hydrate()}}d(y,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",y)}})();</script><astro-island uid="Z1tFh74" prefix="r0" component-url="/_astro/BakedAIChat.CVCQwsg0.js" component-export="default" renderer-url="/_astro/client.DrE9CFQR.js" props="{}" ssr="" client="idle" opts="{&quot;name&quot;:&quot;BakedAIChat&quot;,&quot;value&quot;:true}" await-children=""><div class="bai-root fixed bottom-6 right-6 z-[60] flex flex-col items-end gap-3.5"><style>
+</div> </div> </footer>  <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var l=(o,t)=>{let i=async()=>{await(await o())()},e=typeof t.value=="object"?t.value:void 0,s={timeout:e==null?void 0:e.timeout};"requestIdleCallback"in window?window.requestIdleCallback(i,s):setTimeout(i,s.timeout||200)};(self.Astro||(self.Astro={})).idle=l;window.dispatchEvent(new Event("astro:idle"));})();;(()=>{var A=Object.defineProperty;var g=(i,o,a)=>o in i?A(i,o,{enumerable:!0,configurable:!0,writable:!0,value:a}):i[o]=a;var d=(i,o,a)=>g(i,typeof o!="symbol"?o+"":o,a);{let i={0:t=>m(t),1:t=>a(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(a(t)),5:t=>new Set(a(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>1/0*t},o=t=>{let[l,e]=t;return l in i?i[l](e):void 0},a=t=>t.map(o),m=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([l,e])=>[l,o(e)]));class y extends HTMLElement{constructor(){super(...arguments);d(this,"Component");d(this,"hydrator");d(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let c=this.querySelectorAll("astro-slot"),n={},h=this.querySelectorAll("template[data-astro-template]");for(let r of h){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(let r of c){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("name")||"default"]=r.innerHTML)}let p;try{p=this.hasAttribute("props")?m(JSON.parse(this.getAttribute("props"))):{}}catch(r){let s=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(s+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${s}`,this.getAttribute("props"),r),r}let u;await this.hydrator(this)(this.Component,p,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});d(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),c.disconnect(),this.childrenConnectedCallback()},c=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});c.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}async start(){let e=JSON.parse(this.getAttribute("opts")),c=this.getAttribute("client");if(Astro[c]===void 0){window.addEventListener(`astro:${c}`,()=>this.start(),{once:!0});return}try{await Astro[c](async()=>{let n=this.getAttribute("renderer-url"),[h,{default:p}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),u=this.getAttribute("component-export")||"default";if(!u.includes("."))this.Component=h[u];else{this.Component=h;for(let f of u.split("."))this.Component=this.Component[f]}return this.hydrator=p,this.hydrate},e,this)}catch(n){console.error(`[astro-island] Error hydrating ${this.getAttribute("component-url")}`,n)}}attributeChangedCallback(){this.hydrate()}}d(y,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",y)}})();</script><astro-island uid="b0Jpf" prefix="r0" component-url="/_astro/BakedAIChat.BOXJ08A0.js" component-export="default" renderer-url="/_astro/client.DrE9CFQR.js" props="{}" ssr="" client="idle" opts="{&quot;name&quot;:&quot;BakedAIChat&quot;,&quot;value&quot;:true}" await-children=""><div class="bai-root fixed bottom-6 right-6 z-[60] flex flex-col items-end gap-3.5"><style>
 .bai-root button{background:none;border:0;padding:0;margin:0;font:inherit;color:inherit;cursor:pointer;-webkit-appearance:none;appearance:none}
 .bai-root button:disabled{cursor:default}
 .bai-root textarea{border:0;outline:0;background:transparent;padding:0;margin:0;font:inherit;resize:none;-webkit-appearance:none;appearance:none}
@@ -122,8 +134,36 @@ Bantuan
 .bai-scroll{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.18) transparent}
 .bai-scroll::-webkit-scrollbar{width:6px}
 .bai-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:999px}
+/* --- Mobile: panel penuh layar --- */
+@media (max-width:640px){
+  /* !important dipakai karena lebar &amp; tinggi versi desktop ditulis sebagai
+     inline style pada elemen &lt;section&gt;, dan inline style menang atas aturan
+     CSS biasa. Nilai desktop sendiri tidak diubah sama sekali. */
+  .bai-panel{
+    position:fixed;
+    inset:0;
+    width:100%!important;
+    max-width:none!important;
+    height:100%!important;
+    border-radius:0;
+    /* Aman untuk poni &amp; home indicator iOS. */
+    padding-top:env(safe-area-inset-top);
+    padding-bottom:env(safe-area-inset-bottom);
+    /* Skala 0.96 terasa aneh pada elemen sepenuh layar; diganti geser naik
+       saja. Durasi &amp; easing tetap sama seperti desktop (260ms). */
+    animation-name:baiInFull;
+  }
+  @keyframes baiInFull{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+  /* Tombol bulat tidak perlu mengambang di atas panel yang sudah penuh layar;
+     penutupnya sudah ada di header (chevron + X) dan tombol Escape. */
+  .bai-root[data-open] .bai-launcher{display:none}
+}
+/* Latar tidak ikut ter-scroll saat panel penuh layar. Kelas SENGAJA terpisah
+   dari .spot-lock milik Spotlight supaya keduanya tidak saling mencabut. */
+body.bai-lock{overflow:hidden}
+
 @media (prefers-reduced-motion:reduce){
   .bai-panel,.bai-msg{animation:none}
   .bai-dot{animation:none;opacity:.55}
 }
-      </style><button type="button" aria-expanded="false" aria-label="Buka obrolan dengan BAKEDAI" class="flex h-14 w-14 items-center justify-center rounded-full shadow-2xl transition-transform duration-200 hover:-translate-y-0.5" style="background:#E2572B;color:#FFFFFF"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-circle" aria-hidden="true"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"></path></svg></button></div><!--astro:end--></astro-island> </body></html>
+      </style><button type="button" aria-expanded="false" aria-label="Buka obrolan dengan BAKEDAI" class="bai-launcher flex h-14 w-14 items-center justify-center rounded-full shadow-2xl transition-transform duration-200 hover:-translate-y-0.5" style="background:#E2572B;color:#FFFFFF"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-circle" aria-hidden="true"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"></path></svg></button></div><!--astro:end--></astro-island> </body></html>

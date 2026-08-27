@@ -30,10 +30,24 @@ bisa langsung terlihat utuh:
 Bentuknya sengaja dibuat seperti kerangka (bukan meniru tampilan asli), jadi
 tidak ada angka atau data yang bisa disalahartikan sebagai data betulan.
 
-Sebelum artikel ini dibaca user beneran, GANTI dengan tangkapan layar asli
-dari aplikasi. Caranya cukup timpa file-nya dengan nama yang sama (boleh
-ganti ke .png), lalu sesuaikan ekstensi di file markdown-nya. Tidak ada kode
-yang perlu disentuh.
+STATUS: ketiga file itu SUDAH TIDAK DIPAKAI. Artikel "Silo Your Work" kini
+memakai tangkapan layar asli dari public/guides/ (lihat di bawah). Tidak ada
+lagi artikel yang merujuk ke silo-*.svg, jadi file-nya boleh dihapus kapan saja.
+
+
+SCREENSHOT ASLI — TARUH DI public/guides/, BUKAN DI SINI
+--------------------------------------------------------
+Folder ini isinya ilustrasi/aset umum. Tangkapan layar asli per menu ditaruh
+terpisah supaya rapi per fitur:
+
+    public/guides/{kategori-slug}/{menu-slug}/langkah-1.png
+    public/guides/{kategori-slug}/{menu-slug}/langkah-2.png
+    ...
+
+Dipanggil dari markdown tanpa "public":
+
+    ![Teks alt](/guides/dashboard-overview/silo-your-work/langkah-1.png)
+    *Caption italic tepat di baris bawahnya, tanpa baris kosong.*
 
 Saran ukuran screenshot: lebar 1440-1600px, format .png untuk tampilan UI
 (teks tetap tajam), .jpg untuk foto.

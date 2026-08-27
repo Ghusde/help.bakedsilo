@@ -1,90 +1,82 @@
 ---
 title: Silo Your Work
-description: Menyaring seluruh dashboard agar hanya menampilkan data dari unit yang jadi tanggung jawab Anda.
 category: dashboard-overview
 group: Tutorial Cara Onboarding
 order: 2
+role: ["Admin", "Manager"]
+image: "/guides/dashboard-overview/silo-your-work/langkah-1.png"
 ---
 
-Secara bawaan, dashboard BAKED menampilkan data **seluruh unit** sekaligus. Untuk
-manajer yang cuma memegang satu atau dua outlet, angka gabungan itu justru bikin
-susah — omzet unit sendiri tenggelam di antara unit lain.
+Silo Your Work adalah laman yang menampilkan informasi mengenai arah perusahaan,
+peta seluruh modul, jalur onboarding, serta kemampuan platform **Baked.Silo**.
+Seluruh isinya bersifat pengenalan, apabila Anda sedang mencari
+satu menu tertentu, gunakan pintasan Silo Map pada sisi kanan atas untuk
+langsung menuju peta fitur.
 
-**Silo Your Work** menyelesaikan itu. Anda pilih unit yang relevan sekali saja,
-lalu setiap grafik, tabel, dan angka ringkasan di Dashboard & Overview otomatis
-mengikuti pilihan tersebut.
+## Elemen Utama
 
-Perkiraan waktu: **2 menit**.
+1. **Hero**. Bagian pembuka yang memperkenalkan Baked.Silo secara singkat. Dari
+   sini Anda dapat langsung masuk ke sistem melalui tautan **Silo Starts here**,
+   atau melompat ke bagian lain pada laman ini lewat tiga pintasan di sisi kanan,
+   yaitu **New to BAKED ?**, **Capabilities**, dan **Silo Map**.
 
-## Sebelum mulai
+   ![Bagian hero laman Silo Your Work beserta tautan dan pintasan navigasinya](/guides/dashboard-overview/silo-your-work/langkah-1.png)
 
-Pastikan tiga hal ini sudah beres:
+   *Empat angka pada bagian bawah merangkum skala sistem, mulai dari jumlah modul sampai jumlah pengguna.*
 
-- Akun Anda sudah aktif dan bisa masuk ke Dashboard & Overview.
-- Anda punya akses ke minimal satu unit. Kalau daftar unitnya kosong saat
-  Langkah 2, berarti akses belum diberikan — hubungi admin workspace Anda.
-- Sudah menyelesaikan [Cara Melakukan Registrasi](/artikel/dashboard-overview--registrasi-onboarding).
+2. **Vision & Mission**. Menjelaskan arah yang dituju BAKED beserta nilai yang
+   dipegang dalam mencapainya. Anda bisa membaca lebih lanjut untuk memahami
+   tujuan perusahaan.
 
-## Langkah 1 — Buka menu Silo Your Work
+   ![Bagian Vision and Mission beserta daftar Core Values dan pernyataan misi](/guides/dashboard-overview/silo-your-work/langkah-2.png)
 
-Dari sidebar kiri, masuk ke **Dashboard & Overview**, lalu klik **Silo Your Work**
-di urutan paling atas.
+   *Vision beserta Core Values berada pada kolom kiri, sedangkan Mission berada pada kolom kanan.*
 
-![Sidebar Dashboard & Overview dengan menu Silo Your Work disorot](/images/artikel/silo-01-buka-menu.svg)
-*Menu Silo Your Work ada di urutan pertama pada grup Dashboard & Overview.*
+3. **Silo Map**. Peta seluruh fitur Baked.Silo. Anda dapat mencari menu secara
+   langsung pada kolom **Search a feature**, atau menelusurinya per modul apabila
+   belum tahu nama menu yang dicari. Setiap modul digambarkan sebagai satu jalur,
+   dan titik putih pada jalur menandai fitur yang tersambung ke modul lain.
 
-## Langkah 2 — Pilih unit yang ingin ditampilkan
+   ![Silo Map beserta kolom pencarian fitur dan jalur tiap modul](/guides/dashboard-overview/silo-your-work/langkah-3.png)
 
-Sebuah dialog akan terbuka berisi daftar unit yang boleh Anda akses. Centang unit
-yang ingin ditampilkan — **boleh lebih dari satu** — lalu klik **Simpan silo**.
+   *Kolom pencarian berada di tengah, dengan jalur tiap modul di bawahnya.*
 
-![Dialog pemilihan unit dengan Berawa dan Canggu tercentang](/images/artikel/silo-02-pilih-unit.svg)
-*Memilih dua unit sekaligus akan menampilkan angka gabungan dari keduanya.*
+4. **Automations & Integrations**. Menunjukkan modul mana saja yang saling
+   terhubung dan bekerja otomatis. Klik salah satu kartu untuk melihat koneksinya pada Silo Map.
 
-> **Catatan**
-> Kalau semua unit dicentang, hasilnya sama saja dengan tidak memakai silo sama
-> sekali. Untuk mengembalikan tampilan ke seluruh unit, lebih rapi pakai tombol
-> **Reset silo** di pojok kanan atas dialog.
+   ![Kartu Automations and Integrations beserta label jenis hubungannya](/guides/dashboard-overview/silo-your-work/langkah-4.png)
 
-## Langkah 3 — Pastikan silo sudah aktif
+   *Setiap kartu memasangkan dua modul beserta jenis hubungannya.*
 
-Setelah disimpan, muncul label silo di bagian atas layar berisi nama unit yang
-sedang aktif. Label inilah penanda bahwa angka di halaman sudah tersaring.
+5. **Getting Started**. Titik awal jalur onboarding karyawan baru. Bagian ini
+   menerangkan apa saja yang perlu Anda ketahui pada hari pertama, dimulai dari
+   tahap **Head Office Immersion**.
 
-![Dashboard dengan label silo Berawa dan Canggu di bagian atas](/images/artikel/silo-03-dashboard-tersaring.svg)
-*Selama label ini terlihat, semua widget di halaman hanya menghitung unit tersebut.*
+   ![Bagian Getting Started yang memuat pengantar proses onboarding](/guides/dashboard-overview/silo-your-work/langkah-5.png)
 
-Pilihan silo tersimpan di akun Anda, jadi tidak perlu diatur ulang setiap kali
-login. Silo juga ikut terbawa saat Anda berpindah antar menu di dalam Dashboard
-& Overview.
+   *Pengantar onboarding beserta tahap pertamanya.*
 
-## Halaman apa saja yang ikut tersaring
+6. **Operations Immersion**. Jadwal pelatihan outlet yang dibagi per hari. Anda
+   dapat melihat materi yang dibahas, lama pelatihan, dan siapa yang mendampingi
+   pada setiap tahapnya.
 
-| Halaman | Ikut silo | Keterangan |
-| --- | --- | --- |
-| Executive Overview | Ya | Seluruh KPI dihitung ulang per unit terpilih. |
-| Outlet Dashboard | Ya | Outlet di luar silo disembunyikan dari daftar. |
-| Sales By Period | Ya | Grafik periode mengikuti unit terpilih. |
-| Order Forecasting | Ya | Prediksi dihitung dari riwayat unit terpilih saja. |
-| Financial & Assets | Tidak | Laporan keuangan punya filter entitasnya sendiri. |
+   ![Tiga kartu tahap Operations Immersion](/guides/dashboard-overview/silo-your-work/langkah-6.png)
 
-## Kalau hasilnya tidak sesuai
+   *Tahap pelatihan berurutan, mulai dari Day 1 sampai Day 5.*
 
-**Angka tidak berubah setelah menyimpan.**
-Muat ulang halaman satu kali. Beberapa widget menyimpan hasil hitungan
-sementara di browser dan baru menyegarkan diri setelah halaman dibuka ulang.
+7. **Capabilities**. Ringkasan kemampuan utama platform, meliputi **Unified
+   Dashboard**, **Enterprise Integration**, dan **Advanced Security**. Pilih
+   **Learn more** untuk detail lebih lanjut.
 
-**Daftar unit kosong di Langkah 2.**
-Akun Anda belum ditautkan ke unit mana pun. Ini diatur dari sisi admin, bukan
-dari halaman ini.
+   ![Bagian Capabilities beserta tiga kemampuan inti platform](/guides/dashboard-overview/silo-your-work/langkah-7.png)
 
-**Ada unit yang hilang dari daftar.**
-Anda hanya melihat unit yang jadi hak akses Anda. Kalau ada unit yang mestinya
-muncul tapi tidak ada, mintakan aksesnya ke admin workspace.
+   *Kemampuan inti platform, masing-masing dengan tautan Learn more.*
 
 ## Selanjutnya
 
-- [Executive Overview](/artikel/dashboard-overview--executive-overview) — membaca
-  KPI utama setelah silo aktif.
-- [Outlet Dashboard](/artikel/dashboard-overview--outlet-dashboard) — menelusuri
-  performa per outlet di dalam silo.
+- [Cara Melakukan Registrasi](/artikel/dashboard-overview--registrasi-onboarding),
+  apabila akun Anda belum aktif.
+- [Executive Overview](/artikel/dashboard-overview--executive-overview) untuk
+  membaca KPI utama lintas outlet.
+- [Outlet Dashboard](/artikel/dashboard-overview--outlet-dashboard) untuk
+  menelusuri performa tiap outlet.

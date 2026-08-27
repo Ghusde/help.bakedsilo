@@ -27,6 +27,12 @@
   --line:#e4ddcb;
   --line-dark:#332c22;
   --radius:10px;
+
+  /* Lebar maksimum kanvas halaman dalam (artikel + kategori). Dipakai
+     bersama oleh .crumb, .page-head-row, .menu-groups, dan .article-shell
+     supaya tepi kirinya selalu lurus. Ubah satu baris ini untuk mengatur
+     lebar semua halaman tersebut sekaligus. */
+  --page-max:1560px;
   --shadow:0 1px 2px rgba(21,19,15,.06), 0 8px 24px -12px rgba(21,19,15,.18);
 
   /* >>> WARNA IKON KATEGORI <<<
@@ -36,10 +42,18 @@
 
   /* >>> CHIP IKON (kotak di belakang ikon) <<<
      Dipakai seragam di kartu kategori, baris sub-menu, dan kartu "Mulai
-     dari sini". Card bisa menimpanya lewat --cat-bg/--cat-fg kalau suatu
-     saat ada kategori yang perlu warna sendiri. */
+     dari sini". */
   --chip-bg:#F2F1ED;
   --chip-fg:var(--ink);
+
+  /* >>> WARNA HOVER KARTU KATEGORI <<<
+     Dipakai SERAGAM oleh kesepuluh kartu: --cat-bg jadi warna isian yang
+     tumbuh dari bawah, --cat-fg jadi warna judul + ikon saat kartu di-hover.
+     Ubah dua baris ini untuk mengganti semuanya sekaligus.
+     Kontras sudah dicek: judul 10.7:1 dan teks meta 4.6:1 di atas --cat-bg,
+     dua-duanya lolos WCAG AA. */
+  --cat-bg:#F4F3EF;
+  --cat-fg:#3A3730;
 }
 
 *{box-sizing:border-box}
@@ -292,9 +306,7 @@ body.spot-lock{overflow:hidden}
 .cat-icon.is-image.is-lg{width:22px;height:22px}
 
 /* ---------- Chip ikon ----------
-   Warna default dari --chip-bg/--chip-fg di :root. Kalau sebuah card
-   menanam --cat-bg/--cat-fg sendiri, nilai itu yang menang — jadi warna
-   per-kategori tetap mungkin tanpa mengubah CSS ini. */
+   Warna dari --chip-bg/--chip-fg di :root, seragam untuk semua kategori. */
 .cat-chip{
   width:40px;
   height:40px;
@@ -355,9 +367,13 @@ body.spot-lock{overflow:hidden}
 
 /* ---------- Breadcrumb ---------- */
 .crumb{
-  max-width:1180px;margin:0 auto;padding:18px 28px 0;
+  max-width:var(--page-max);margin:0 auto;padding:18px 28px 0;
   font-size:13px;color:var(--stone);
   display:flex;gap:6px;align-items:center;
+  /* Tanpa wrap, deretan breadcrumb + tombol Kembali memaksa halaman melebar
+     di layar sempit — tiap tautan tergencet jadi dua baris dan barisnya
+     tetap lebih panjang dari layar. */
+  flex-wrap:wrap;
 }
 .crumb a:hover{color:var(--rust)}
 .crumb .sep{color:var(--line)}
@@ -430,7 +446,7 @@ body.spot-lock{overflow:hidden}
 
 /* ---------- Category page: page head with icon ---------- */
 .page-head-row{
-  max-width:1180px;margin:22px auto 0;padding:0 28px;
+  max-width:var(--page-max);margin:22px auto 0;padding:0 28px;
   display:flex;align-items:center;gap:14px;
 }
 .page-head-row h1{
@@ -485,7 +501,7 @@ body.spot-lock{overflow:hidden}
 .page-head-icon svg{width:22px;height:22px}
 
 /* ---------- Grouped menu list ---------- */
-.menu-groups{max-width:1180px;margin:0 auto;padding:20px 28px 70px;display:flex;flex-direction:column;gap:22px}
+.menu-groups{max-width:var(--page-max);margin:0 auto;padding:20px 28px 70px;display:flex;flex-direction:column;gap:22px}
 .group-block .group-header{
   font-size:12px;
   letter-spacing:.06em;
@@ -540,16 +556,20 @@ a.menu-row:hover{background:#FCFAF6}
 
 /* ---------- Article layout ---------- */
 .article-shell{
-  max-width:1240px;
+  max-width:var(--page-max);
   margin:0 auto;
   padding:24px 28px 100px;
   display:grid;
-  grid-template-columns:260px 1fr 220px;
+  /* minmax(0,1fr), BUKAN 1fr. Track `1fr` punya batas minimum otomatis
+     sebesar min-content isinya, jadi satu elemen lebar (tabel, kode, gambar)
+     bisa mendorong track melebihi lebar layar dan seluruh halaman jadi bisa
+     digeser ke samping. minmax(0,...) mencabut batas minimum itu. */
+  grid-template-columns:260px minmax(0,1fr) 220px;
   gap:36px;
   align-items:start;
 }
 @media(max-width:980px){
-  .article-shell{grid-template-columns:1fr}
+  .article-shell{grid-template-columns:minmax(0,1fr)}
 }
 
 .side-nav{
@@ -604,8 +624,11 @@ a.menu-row:hover{background:#FCFAF6}
 }
 
 .article-main{background:#fff;border-radius:10px;padding:32px 36px}
-.article-main h1{font-family:var(--font-display);font-weight:500;letter-spacing:-.02em;font-size:26px;color:#2C2C2A;margin:0 0 6px;line-height:1.25}
-.article-main .lede{color:var(--stone);font-size:16px;line-height:1.6;margin:0 0 26px}
+/* padding-left 19px menyamakan tepi kiri judul dengan .article-main p
+   (19px) dan h2 (border 3px + padding 16px), supaya seluruh isi artikel
+   rata pada satu garis vertikal. */
+.article-main h1{font-family:var(--font-display);font-weight:500;letter-spacing:-.02em;font-size:26px;color:#2C2C2A;margin:0 0 6px;line-height:1.25;padding-left:19px}
+.article-main .lede{color:var(--stone);font-size:16px;line-height:1.6;margin:0 0 26px;padding-left:19px}
 .step{
   border-left:3px solid #993C1D;   /* clay-dark */
   padding:2px 0 2px 16px;
@@ -625,6 +648,44 @@ a.menu-row:hover{background:#FCFAF6}
   text-align:center;
 }
 
+/* ---------- Tombol kembali ke atas (laman artikel) ---------- */
+/* Ukuran, radius, dan sumbu kanannya SENGAJA disamakan dengan launcher chat
+   (56px pada bottom:24px/right:24px) supaya kedua tombol terbaca sebagai satu
+   pasang dan titik tengahnya lurus. Warnanya sengaja dibedakan: chat memakai
+   aksen oranye sebagai aksi utama, tombol ini memakai hitam sebagai aksi
+   sekunder, jadi keduanya tidak tertukar walau bentuknya kembar. */
+.scroll-top{
+  position:fixed;
+  right:24px;
+  /* 24px posisi launcher chat + 56px tingginya + 14px jarak antar tombol. */
+  bottom:94px;
+  /* Di bawah chat (z-60) supaya panel chat yang terbuka menutupi tombol ini. */
+  z-index:50;
+  width:56px;height:56px;padding:0;
+  display:flex;align-items:center;justify-content:center;
+  border:0;
+  border-radius:999px;
+  background:var(--ink);
+  color:var(--white);
+  box-shadow:var(--shadow);
+  cursor:pointer;
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(8px);
+  transition:opacity .22s var(--ease-out-soft),
+             transform .22s var(--ease-out-soft),
+             visibility .22s;
+}
+.scroll-top[data-show]{opacity:1;visibility:visible;transform:none}
+/* Angkat 2px saat hover, meniru gerak launcher chat. */
+.scroll-top[data-show]:hover{transform:translateY(-2px)}
+.scroll-top:focus-visible{outline:2px solid var(--rust);outline-offset:3px}
+.scroll-top svg{width:24px;height:24px;display:block}
+@media(prefers-reduced-motion:reduce){
+  .scroll-top{transition:opacity .01ms linear;transform:none}
+  .scroll-top[data-show]:hover{transform:none}
+}
+
 .toc{position:sticky;top:80px}
 .toc-box{background:#fff;border-radius:10px;padding:16px}
 .toc-box .eyebrow{display:block;margin-bottom:10px}
@@ -638,6 +699,42 @@ a.menu-row:hover{background:#FCFAF6}
   padding-left:10px;
 }
 .toc-box li a:hover{color:var(--rust);border-color:var(--rust)}
+
+/* ============================================================
+   RESPONSIVE HALAMAN ARTIKEL — WAJIB DI SINI, SETELAH SEMUA
+   ATURAN DASAR .side-nav / .toc / .article-main DI ATAS.
+   Specificity-nya sama persis (.side-nav lawan .side-nav), jadi
+   yang menang adalah yang ditulis BELAKANGAN. Kalau blok ini
+   dipindah ke atas, aturan dasarnya menimpa balik dan sidebar
+   kembali sticky di mobile — persis bug yang diperbaiki di sini.
+   Aturan yang sama berlaku untuk blok reduced-motion di akhir file.
+   ============================================================ */
+@media(max-width:980px){
+  /* Saat kolom ditumpuk, sidebar & daftar isi TIDAK boleh sticky lagi:
+     posisinya sudah di atas artikel, jadi kalau tetap menempel ia ikut
+     turun saat halaman digulir dan menimpa teks yang sedang dibaca.
+     max-height + overflow juga dicabut supaya tidak jadi kotak scroll
+     sendiri yang menyandera gerakan jari. */
+  .side-nav{
+    position:static;
+    top:auto;
+    max-height:none;
+    overflow:visible;
+  }
+  .toc{position:static;top:auto}
+}
+
+/* Layar sempit: padding bertumpuk (shell 28px + kartu 36px = 128px terbuang)
+   menyisakan kolom teks yang terlalu kurus untuk dibaca. Di 320px, angka
+   lama hanya menyisakan 192px; angka ini menyisakan 248px. */
+@media(max-width:620px){
+  .crumb{padding:14px 16px 0}
+  .article-shell{padding:16px 16px 80px;gap:16px}
+  .article-main{padding:22px 20px}
+  .article-main h1{font-size:23px}
+  .article-main .lede{font-size:15px;margin-bottom:20px}
+  .side-nav{padding:14px 12px}
+}
 
 /* Footer sekarang punya layout sendiri (utility Tailwind di Base.astro).
    Aturan global lama dihapus karena `text-align:center` + `border-top` terang
@@ -714,7 +811,9 @@ a.menu-row:hover{background:#FCFAF6}
 }
 .article-main li{margin-bottom:7px}
 .article-main li:last-child{margin-bottom:0}
-.article-main li::marker{color:#D85A30}
+/* Nomor dan bullet daftar memakai warna teks utama, bukan aksen oranye,
+   supaya penomoran di seluruh laman user guide tampil hitam. */
+.article-main li::marker{color:var(--ink)}
 .article-main li > ul,
 .article-main li > ol{margin:7px 0 0;padding-left:20px}
 

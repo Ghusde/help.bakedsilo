@@ -56,7 +56,7 @@ const POPULAR = ["dashboard", "sales", "asset"];
 // tombol WhatsApp sengaja tidak dirender selama `whatsapp` masih kosong,
 // daripada mengirim user ke link mati.
 const SUPPORT = {
-  whatsapp: "",                        // contoh: "https://wa.me/628123456789"
+  whatsapp: "",                              // contoh: "https://wa.me/628123456789"
   form: "mailto:it.support@baked.co.id",     // ganti ke URL form kalau sudah ada
 };
 
@@ -78,21 +78,6 @@ const BANNER_IMG = ["bakedsilo-preview.jpg", "bakedsilo-preview.png", "bakedsilo
   .find(p => fs.existsSync(path.join(process.cwd(), p)))
   ?.replace("public", "");
 
-// Warna per kategori — HANYA dipakai untuk layer fill saat hover; chip-nya
-// sendiri tetap abu seragam. Setiap pasangan sudah diuji kontras: judul,
-// teks meta, dan warna aksen semuanya lolos 4.5:1 di atas warna fill-nya.
-const CAT_COLORS = {
-  "dashboard-overview":      { bg: "#F2F1FE", fg: "#3C3489" },
-  "financial-assets":        { bg: "#E7F5EC", fg: "#1F6B42" },
-  "project-management":      { bg: "#FFF1E3", fg: "#96490F" },
-  "operations-management":   { bg: "#FDECEC", fg: "#A02C2C" },
-  "procurement-management":  { bg: "#E9F2FD", fg: "#1D4E89" },
-  "tspoonbaked":             { bg: "#FCF3DC", fg: "#7D5F08" },
-  "customer-sales":          { bg: "#FDEFF7", fg: "#93245F" },
-  "human-resources":         { bg: "#E6F4F6", fg: "#155E69" },
-  "documents-communication": { bg: "#F4F3EF", fg: "#3A3730" },
-  "system-tools":            { bg: "#F2F0FB", fg: "#46389B" },
-};
 ---
 <Base title="Pusat Bantuan — BAKED.">
 
@@ -134,13 +119,8 @@ const CAT_COLORS = {
 
     <div class="grid" id="cat-grid" data-visible={MOBILE_VISIBLE}>
       {cards.map(c => {
-        const col = CAT_COLORS[c.slug] ?? { bg: "var(--chip-bg)", fg: "var(--ink)" };
         return (
-          <a
-            class="cat-card"
-            href={`/kategori/${c.slug}`}
-            style={`--cat-bg:${col.bg};--cat-fg:${col.fg}`}
-          >
+          <a class="cat-card" href={`/kategori/${c.slug}`}>
             {/* Layer warna yang "tumbuh" dari bawah saat hover. aria-hidden
                 karena murni dekoratif dan tidak boleh dibaca screen reader. */}
             <span class="cat-fill" aria-hidden="true" />
@@ -202,8 +182,13 @@ const CAT_COLORS = {
     </a>
   </div>
 
-  <section class="px-7 pb-10">
-    <div class="mx-auto max-w-[1180px] rounded-[10px] bg-white p-5 sm:flex sm:items-center sm:justify-between sm:gap-6">
+  {/* Geometri SENGAJA meniru .section di style.css (max-width:1180px +
+      padding kiri/kanan 28px, box-sizing:border-box) supaya lebar isinya
+      sama persis 1124px dengan grid kategori di atasnya. Sebelumnya padding
+      ada di <section> sementara max-width ada di kartu, jadi kartunya jadi
+      1180px penuh dan menyembul 28px di kiri-kanan. */}
+  <section class="mx-auto max-w-[1180px] px-7 pb-10">
+    <div class="rounded-[10px] bg-white p-5 sm:flex sm:items-center sm:justify-between sm:gap-6">
       <div>
         <h2 class="m-0 text-[18px] font-semibold text-charcoal">Belum menemukan jawabannya?</h2>
         <p class="m-0 mt-[6px] text-[14px] text-stone">
