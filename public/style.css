@@ -728,12 +728,42 @@ a.menu-row:hover{background:#FCFAF6}
    menyisakan kolom teks yang terlalu kurus untuk dibaca. Di 320px, angka
    lama hanya menyisakan 192px; angka ini menyisakan 248px. */
 @media(max-width:620px){
+  /* Padding kartu di layar sempit. Dipakai ulang oleh perhitungan gambar
+     penuh di bawah, jadi cukup diubah di satu tempat. */
+  :root{--card-pad-sm:20px}
+
   .crumb{padding:14px 16px 0}
   .article-shell{padding:16px 16px 80px;gap:16px}
-  .article-main{padding:22px 20px}
+  .article-main{padding:22px var(--card-pad-sm)}
   .article-main h1{font-size:23px}
   .article-main .lede{font-size:15px;margin-bottom:20px}
   .side-nav{padding:14px 12px}
+
+  /* Di layar lebar, isi artikel sengaja masuk 19px membentuk satu garis
+     vertikal. Di layar sempit indentasi itu bertumpuk dengan padding kartu
+     dan indentasi daftar, sehingga tiap blok mulai pada titik yang berbeda
+     dan terbaca seperti bergeser-geser saat digulir. Semuanya dikembalikan
+     ke nol supaya tepi kirinya satu garis. */
+  .article-main h1,
+  .article-main .lede,
+  .article-main p{padding-left:0}
+  .article-main h2{padding-left:12px}
+
+  /* list-style-position:inside menaruh nomor DI DALAM kotak teks, jadi nomor,
+     teks, dan gambar sama-sama mulai dari tepi yang sama. */
+  .article-main ul,
+  .article-main ol{margin-left:0;padding-left:0;list-style-position:inside}
+  .article-main li{margin-bottom:18px}
+
+  /* Screenshot ditarik keluar dari padding kartu supaya selebar kartu, bukan
+     selebar kolom teks yang sudah menyusut. Angkanya terikat --card-pad-sm
+     di atas, jadi tidak akan meleset kalau padding kartu diubah. */
+  .article-main img{
+    margin-left:calc(var(--card-pad-sm) * -1);
+    width:calc(100% + var(--card-pad-sm) * 2);
+    max-width:none;
+    border-radius:0;
+  }
 }
 
 /* Footer sekarang punya layout sendiri (utility Tailwind di Base.astro).
